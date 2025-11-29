@@ -9,3 +9,7 @@ dev:
 .PHONY: render-start
 render-start:
 	gunicorn task_manager.wsgi
+
+.PHONY: install
+install:
+	uv sync
