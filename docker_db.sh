@@ -1,0 +1,1 @@
+docker run -d --name task_manager -p 5432:5432 -e POSTGRES_DB=task_manager -e POSTGRES_USER=user -e POSTGRES_PASSWORD=password postgres

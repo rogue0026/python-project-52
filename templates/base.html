@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+{% load django_bootstrap5 %}
+<head>
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Менеджер задач</title>
+</head>
+<body>
+    <div class="container">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+                <svg class="bi me-2" width="40" height="32" aria-hidden="true"><use xlink:href="#bootstrap"></use></svg>
+                <span class="fs-4">Менеджер задач</span>
+            </a>
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a href="{% url 'users_list_view' %}" class="nav-link">Пользователи</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'login_view' %}" class="nav-link">Вход</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'registration_view' %}" class="nav-link">Регистрация</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a href="{% url 'logout_view' %}" class="nav-link">Выйти</a>
+                </li>
+                {% endif %}
+            </ul>
+        </header>
+    </div>
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    {% block content %}
+    {% endblock %}
+    <div class="container">
+        <footer class="py-3 my-4">
+            <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+                <li class="nav-item"><a href="{% url 'login_view' %}" class="nav-link px-2 text-body-secondary">Вход</a></li>
+                <li class="nav-item"><a href="{% url 'registration_view' %}" class="nav-link px-2 text-body-secondary">Регистрация</a></li>
+            </ul>
+            <p class="text-center text-body-secondary">© 2025 Менеджер задач, Inc</p></footer>
+    </div>
+</body>
+</html>

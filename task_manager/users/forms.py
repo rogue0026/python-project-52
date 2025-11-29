@@ -1,0 +1,96 @@
+from django import forms
+
+
+class RegistrationForm(forms.Form):
+    first_name = forms.CharField(
+        label="Имя:",
+        required=True,
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Имя",
+            "id": "id_first_name",
+        },
+        ),
+    )
+
+    last_name = forms.CharField(
+        label="Фамилия:",
+        required=True,
+        widget=forms.TextInput(attrs={
+             "class": "form-control",
+             "placeholder": "Фамилия",
+             "id": "id_last_name",
+        }),
+    )
+
+    username = forms.CharField(
+        label="Имя пользователя:",
+        required=True,
+        max_length=150,
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Имя пользователя",
+            "id": "id_username",
+        }),
+    )
+
+    password = forms.CharField(
+        label="Пароль",
+        required=True,
+        min_length=3,
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "type": "password",
+            "id": "id_password",
+        }),
+    )
+
+    password_confirm = forms.CharField(
+        label="Подтверждение пароля:",
+        required=True,
+        min_length=3,
+        widget=forms.TextInput(attrs={
+            "class": "form-control mb-3",
+            "type": "password",
+            "id": "id_password_confirm",
+        }),
+    )
+
+    def clean_username(self):
+        valid_symbols = "abcdefghijklmnopqrstuvwxyz0123456789@.+-_"
+        data = self.cleaned_data['username']
+        if len(data) > 150:
+            raise forms.ValidationError("Имя пользователя не должно превышать 150 символов")
+
+        for s in data.lower():
+            if s not in valid_symbols:
+                raise forms.ValidationError("Имя пользователя содержит недопустимые символы")
+
+        return data
+
+    def clean_password_confirm(self):
+        password_confirm = self.cleaned_data['password_confirm']
+        if password_confirm != self.cleaned_data['password']:
+            raise forms.ValidationError("Пароли не совпадают")
+        return password_confirm
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField(
+        label="Имя пользователя:",
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Имя пользователя",
+            "id": "id_username",
+        })
+    )
+
+    password = forms.CharField(
+        label="Пароль",
+        widget=forms.TextInput(attrs={
+            "type": "password",
+            "class": "form-control",
+            "placeholder": "Пароль",
+            "id": "id_password",
+        })
+    )

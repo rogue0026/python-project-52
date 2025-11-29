@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <main class="form-signin w-25 m-auto">
+    <form action="{% url 'login_view' %}" method="post">
+        {% csrf_token %}
+        <h1 class="h3 mb-3 fw-normal">Авторизация</h1>
+        {% for field in form %}
+            <div class="form-group">
+                <label class="form-label">{{ field.label }}</label>
+                {{ field }}
+            </div>
+        {% endfor %}
+        <button class="btn btn-primary w-100 py-2 mt-3" type="submit">Войти</button>
+    </form>
+    </main>
+</div>
+{% endblock %}
