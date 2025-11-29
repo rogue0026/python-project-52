@@ -19,9 +19,9 @@ from django.urls import path, include
 from task_manager.views import index, login
 
 
-
 urlpatterns = [
     path('', index, name="start_page"),
     path('admin/', admin.site.urls),
     path('users/', include('task_manager.users.urls')),
+    path('statuses/', include('task_manager.statuses.urls')),
 ]
