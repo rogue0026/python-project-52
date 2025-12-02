@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container w-75">
+    {% include "./filter_panel.html" %}
         <a class="btn btn-primary mb-3" href="{% url 'tasks_create_view' %}">Создать задачу</a>
         <table class="table table-hover table-bordered">
         <thead>

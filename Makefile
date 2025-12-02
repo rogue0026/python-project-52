@@ -2,6 +2,18 @@
 build:
 	./build.sh
 
+.PHONY: collectstatic
+collectstatic:
+	echo 'stub for collectstatic'
+
+.PHONY: makemigrations
+makemigrations:
+	uv run manage.py makemigrations
+
+.PHONY: migrate
+migrate: makemigrations
+	uv run manage.py migrate
+
 .PHONY: dev
 dev:
 	uv run manage.py runserver
