@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container w-75">
+        <a class="btn btn-primary mb-3" href="{% url 'labels_create_view' %}">Создать метку</a>
+        <table class="table table-hover table-bordered">
+        <thead>
+            <th>ID</th>
+            <th>Имя</th>
+            <th>Дата создания</th>
+            <th>Действия</th>
+        </thead>
+        <tbody>
+            {% for label in labels %}
+                <tr>
+                    <td>{{ label.id }}</td>
+                    <td>{{ label.name }}</td>
+                    <td>{{ label.created_at|date:"d.m.Y H:i" }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'labels_update_view' label.id %}">Изменить</a>
+                        <br>
+                        <a href="{% url 'labels_delete_view' label.id %}">Удалить</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    </div>
+{% endblock %}
