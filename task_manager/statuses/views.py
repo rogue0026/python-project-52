@@ -1,9 +1,10 @@
+from django.contrib import messages
+from django.shortcuts import redirect, render, reverse
 from django.views import View
-from django.shortcuts import render, redirect, reverse
+
+from task_manager.statuses.forms import StatusForm
 from task_manager.statuses.models import Status
 from task_manager.users.middleware import AuthRequiredMixin
-from task_manager.statuses.forms import StatusForm
-from django.contrib import messages
 
 
 class StatusesListView(AuthRequiredMixin, View):
@@ -113,10 +114,6 @@ class DeleteStatusView(View):
         )
 
     def post(self, request, *args, **kwargs):
-        # если статус связан хотя бы с одной задачей то удалить его нельзя - редирект на страницу со списком статусов и вывести
-        # сообщение +Невозможно удалить статус, потому что он используется+
-        # если статус не связан ни с одной задачей, то удаляем его из таблицы
-        # и редиректим на страницу со списком статусов с выводом сообщения +Статус успешно удален+
         # todo добавить проверку на наличие связей с имеющимися задачами
         status_id = int(kwargs.get("pk"))
         status = Status.objects.get(id=status_id)

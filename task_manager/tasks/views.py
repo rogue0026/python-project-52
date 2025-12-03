@@ -1,24 +1,22 @@
-from django.db import transaction
-from django.views import View
 from django.contrib import messages
+from django.db import transaction
 from django.shortcuts import (
-    render,
     redirect,
+    render,
     reverse,
 )
+from django.views import View
 
+from task_manager.labels.models import (
+    Label,
+)
 from task_manager.tasks.filters import TaskFilter
+from task_manager.tasks.forms import TaskForm
+from task_manager.tasks.middleware import DeletePermissionRequiredMixin
 from task_manager.tasks.models import (
     Task,
     TaskLabel,
 )
-
-from task_manager.tasks.middleware import DeletePermissionRequiredMixin
-from task_manager.labels.models import (
-    Label,
-)
-
-from task_manager.tasks.forms import TaskForm
 from task_manager.users.middleware import (
     AuthRequiredMixin,
 )
@@ -27,7 +25,13 @@ from task_manager.users.middleware import (
 class TasksListView(AuthRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         all_tasks = Task.objects.all()
-        tasks_filter = TaskFilter(request.GET, queryset=all_tasks, request=request)
+
+        tasks_filter = TaskFilter(
+            request.GET,
+            queryset=all_tasks,
+            request=request,
+        )
+
         return render(
             request,
             "tasks/index.html",
@@ -36,6 +40,7 @@ class TasksListView(AuthRequiredMixin, View):
                 "tasks": tasks_filter.qs,
             }
         )
+
 
 class CreateTaskView(AuthRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -90,8 +95,12 @@ class UpdateTaskView(AuthRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         task_id = int(kwargs.get("pk"))
         task = Task.objects.get(id=task_id)
-        labels_ids = TaskLabel.objects.filter(task_id=task_id).values_list("label_id", flat=True)
+
+        labels_ids = TaskLabel.objects.filter(
+            task_id=task_id).values_list("label_id", flat=True)
+
         linked_labels = Label.objects.filter(id__in=labels_ids)
+
         form = TaskForm({
             "name": task.name,
             "description": task.description,
@@ -99,6 +108,7 @@ class UpdateTaskView(AuthRequiredMixin, View):
             "executor": task.executor,
             "labels": linked_labels,
         })
+
         return render(
             request,
             "tasks/update.html",
@@ -189,9 +199,13 @@ class DetailsTaskView(View):
     def get(self, request, *args, **kwargs):
         task_id = int(kwargs.get("pk"))
         task = Task.objects.get(id=task_id)
-        # todo оптимизировать
-        task_labels = TaskLabel.objects.filter(task_id=task_id).values_list("label_id", flat=True)
-        label_names = Label.objects.filter(id__in=task_labels).values_list("name", flat=True)
+
+        task_labels = TaskLabel.objects.filter(
+            task_id=task_id).values_list("label_id", flat=True)
+
+        label_names = Label.objects.filter(
+            id__in=task_labels).values_list("name", flat=True)
+
         return render(
             request,
             "tasks/details.html",

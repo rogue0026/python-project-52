@@ -1,10 +1,10 @@
-from django.db.models import Value
 from django import forms
-
-from task_manager.statuses.models import Status
-from task_manager.labels.models import Label
 from django.contrib.auth.models import User
+from django.db.models import Value
 from django.db.models.functions import Concat
+
+from task_manager.labels.models import Label
+from task_manager.statuses.models import Status
 
 
 class TaskForm(forms.Form):

@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import redirect, reverse
+
 from task_manager.tasks.models import Task
 
 

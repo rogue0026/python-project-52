@@ -1,11 +1,15 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
-from django.views.generic.edit import View
-from task_manager.users.forms import RegistrationForm, LoginForm
 from django.contrib import messages
-from task_manager.users.middleware import AuthRequiredMixin, EditPermissionRequiredMixin
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.shortcuts import redirect, render
+from django.urls import reverse
+from django.views.generic.edit import View
+
+from task_manager.users.forms import LoginForm, RegistrationForm
+from task_manager.users.middleware import (
+    AuthRequiredMixin,
+    EditPermissionRequiredMixin,
+)
 
 
 class UserListView(View):
@@ -121,6 +125,7 @@ class LogoutView(View):
 
 class UpdateUserView(AuthRequiredMixin, EditPermissionRequiredMixin, View):
     login_url = "users/login/"
+
     def get(self, request, *args, **kwargs):
         user_id = kwargs.get("pk")
         usr = User.objects.get(id=user_id)
@@ -168,6 +173,7 @@ class UpdateUserView(AuthRequiredMixin, EditPermissionRequiredMixin, View):
 
 class DeleteUserView(AuthRequiredMixin, EditPermissionRequiredMixin, View):
     login_url = "users/login/"
+
     def get(self, request, *args, **kwargs):
         user_id = kwargs.get("pk")
         print(user_id)

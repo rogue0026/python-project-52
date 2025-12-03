@@ -1,14 +1,11 @@
-from django_filters import (
-    FilterSet,
-    ModelChoiceFilter,
-    BooleanFilter
-)
-from django.db.models.functions import Concat
-from django.db.models import Value
 from django import forms
 from django.contrib.auth.models import User
-from task_manager.statuses.models import Status
+from django.db.models import Value
+from django.db.models.functions import Concat
+from django_filters import BooleanFilter, FilterSet, ModelChoiceFilter
+
 from task_manager.labels.models import Label
+from task_manager.statuses.models import Status
 
 
 class TaskFilter(FilterSet):
@@ -34,7 +31,6 @@ class TaskFilter(FilterSet):
             "class": "form-control",
         }),
     )
-
 
     label = ModelChoiceFilter(
         label="Метка",

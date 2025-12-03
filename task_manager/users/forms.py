@@ -60,11 +60,11 @@ class RegistrationForm(forms.Form):
         valid_symbols = "abcdefghijklmnopqrstuvwxyz0123456789@.+-_"
         data = self.cleaned_data['username']
         if len(data) > 150:
-            raise forms.ValidationError("Имя пользователя не должно превышать 150 символов")
+            raise forms.ValidationError("Имя пользователя не должно превышать 150 символов")  # noqa: E501
 
         for s in data.lower():
             if s not in valid_symbols:
-                raise forms.ValidationError("Имя пользователя содержит недопустимые символы")
+                raise forms.ValidationError("Имя пользователя содержит недопустимые символы")  # noqa: E501
 
         return data
 

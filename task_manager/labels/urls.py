@@ -1,11 +1,11 @@
 from django.urls import path
+
 from task_manager.labels.views import (
-    LabelListView,
     CreateLabelView,
     DeleteLabelView,
+    LabelListView,
     UpdateLabelView,
 )
-
 
 urlpatterns = [
     path("<int:pk>/update/", UpdateLabelView.as_view(), name="labels_update_view"),

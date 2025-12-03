@@ -1,0 +1,22 @@
+line-length = 80
+
+exclude = [
+    "task_manager/labels/migrations/*",
+    "task_manager/statuses/migrations/*",
+    "task_manager/tasks/migrations/*",
+    "task_manager/users/migrations/*",
+    "task_manager/labels/urls.py",
+    "task_manager/statuses/urls.py",
+    "task_manager/tasks/urls.py",
+    "task_manager/users/urls.py",
+    "task_manager/urls.py",
+    "task_manager/settings.py",
+]
+
+[lint.per-file-ignores]
+  # init modules can contain the local imports, logic, unused imports
+"__init__.py" = ["F401"]
+
+[lint]
+preview = true
+select = ["E", "F", "I", "C90"]

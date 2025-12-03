@@ -25,3 +25,7 @@ render-start:
 .PHONY: install
 install:
 	uv sync
+
+.PHONY: lint
+lint:
+	@uv run ruff check --fix task_manager/
