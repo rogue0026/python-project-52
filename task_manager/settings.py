@@ -26,17 +26,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=fbh+lrkq2ew8c594&q1b(bfj=!z6gf_zfs06bmyvotgeucukv'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if os.getenv('DEBUG') == 'on' else False
 
 ALLOWED_HOSTS = [
     'task-manager-ekb1.onrender.com',
     'webserver',
     'localhost',
     '127.0.0.1',
-
 ]
 
 
@@ -67,6 +66,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
 ]
 
 ROOT_URLCONF = 'task_manager.urls'
@@ -74,6 +74,14 @@ ROOT_URLCONF = 'task_manager.urls'
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 LOGIN_URL = 'users/login/'
+
+ROLLBAR = {
+    'access_token': os.getenv("ROLLBAR_TOKEN"),
+    'environment': 'development' if os.getenv('DEBUG') == "on" else 'production',
+    'code_version': '1.0',
+    'branch': 'main',
+    'root': BASE_DIR,
+}
 
 TEMPLATES = [
     {
@@ -128,7 +136,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
