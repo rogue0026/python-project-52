@@ -1,11 +1,10 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic.edit import View
 
-from task_manager.users.forms import LoginForm, RegistrationForm
+from task_manager.users.forms import RegistrationForm
 from task_manager.users.middleware import (
     AuthRequiredMixin,
     EditPermissionRequiredMixin,
@@ -68,59 +67,6 @@ class UserRegistrationView(View):
             "alert alert-success",
         )
         return redirect(reverse("login_view"))
-
-
-class LoginView(View):
-    def get(self, request, *args, **kwargs):
-        form = LoginForm()
-        return render(
-            request,
-            "users/login.html",
-            context={
-                "form": form,
-            },
-        )
-
-    def post(self, request, *args, **kwargs):
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        usr = authenticate(
-            username=username,
-            password=password,
-        )
-        if not usr:
-            messages.error(
-                request,
-                "Неверное имя пользователя или пароль",
-                extra_tags="alert alert-danger",
-            )
-            form = LoginForm(request.POST)
-            return render(
-                request,
-                "users/login.html",
-                context={
-                    "form": form,
-                },
-                status=422,
-            )
-        login(request, usr)
-        messages.success(
-            request,
-            "Вход в систему выполнен",
-            extra_tags="alert alert-success",
-        )
-        return redirect(reverse("start_page"))
-
-
-class LogoutView(View):
-    def get(self, request):
-        logout(request)
-        messages.success(
-            request,
-            "Вы вышли из системы",
-            "alert alert-success",
-        )
-        return redirect(reverse("start_page"))
 
 
 class UpdateUserView(AuthRequiredMixin, EditPermissionRequiredMixin, View):
