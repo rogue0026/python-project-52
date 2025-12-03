@@ -4,7 +4,6 @@ from task_manager.statuses.models import Status
 from task_manager.users.middleware import AuthRequiredMixin
 from task_manager.statuses.forms import StatusForm
 from django.contrib import messages
-from datetime import datetime
 
 
 class StatusesListView(AuthRequiredMixin, View):

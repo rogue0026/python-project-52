@@ -1,4 +1,3 @@
-from mmap import PROT_EXEC
 
 from django.db.models import ProtectedError
 from django.shortcuts import (

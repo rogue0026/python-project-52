@@ -5,7 +5,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.generic.edit import View
 from task_manager.users.forms import RegistrationForm, LoginForm
 from django.contrib import messages
-from datetime import datetime
 from task_manager.users.middleware import AuthRequiredMixin, EditPermissionRequiredMixin
 
 

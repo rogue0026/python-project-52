@@ -34,25 +34,25 @@ class RegistrationForm(forms.Form):
         }),
     )
 
-    password = forms.CharField(
+    password1 = forms.CharField(
         label="Пароль",
         required=False,
         min_length=3,
         widget=forms.TextInput(attrs={
             "class": "form-control",
             "type": "password",
-            "id": "id_password",
+            "id": "id_password1",
         }),
     )
 
-    password_confirm = forms.CharField(
+    password2 = forms.CharField(
         label="Подтверждение пароля:",
         required=False,
         min_length=3,
         widget=forms.TextInput(attrs={
             "class": "form-control mb-3",
             "type": "password",
-            "id": "id_password_confirm",
+            "id": "id_password2",
         }),
     )
 
@@ -68,11 +68,11 @@ class RegistrationForm(forms.Form):
 
         return data
 
-    def clean_password_confirm(self):
-        password_confirm = self.cleaned_data['password_confirm']
-        if password_confirm != self.cleaned_data['password']:
+    def clean_password2(self):
+        password2 = self.cleaned_data['password2']
+        if password2 != self.cleaned_data['password1']:
             raise forms.ValidationError("Пароли не совпадают")
-        return password_confirm
+        return password2
 
 
 class LoginForm(forms.Form):

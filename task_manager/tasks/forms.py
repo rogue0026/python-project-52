@@ -47,7 +47,7 @@ class TaskForm(forms.Form):
             )),
         widget=forms.Select(attrs={
             "class": "form-control",
-            "id": "id_status",
+            "id": "id_executor",
         })
     )
     executor.label_from_instance = lambda obj: f"{obj.full_name}"
