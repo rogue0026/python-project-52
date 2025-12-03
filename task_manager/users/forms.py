@@ -36,7 +36,7 @@ class RegistrationForm(forms.Form):
 
     password = forms.CharField(
         label="Пароль",
-        required=True,
+        required=False,
         min_length=3,
         widget=forms.TextInput(attrs={
             "class": "form-control",
@@ -47,7 +47,7 @@ class RegistrationForm(forms.Form):
 
     password_confirm = forms.CharField(
         label="Подтверждение пароля:",
-        required=True,
+        required=False,
         min_length=3,
         widget=forms.TextInput(attrs={
             "class": "form-control mb-3",

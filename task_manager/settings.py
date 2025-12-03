@@ -32,7 +32,7 @@ SECRET_KEY = 'django-insecure-=fbh+lrkq2ew8c594&q1b(bfj=!z6gf_zfs06bmyvotgeucukv
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'https://task-manager-ekb1.onrender.com',
+    'task-manager-ekb1.onrender.com',
     'webserver',
     'localhost',
     '127.0.0.1',
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_bootstrap5',
+    'django_filters',
     'task_manager',
     'task_manager.users',
     'task_manager.statuses',

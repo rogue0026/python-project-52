@@ -6,11 +6,13 @@ from django.shortcuts import (
     redirect,
     reverse,
 )
-from task_manager.tasks.forms import FilterPanelForm
+
+from task_manager.tasks.filters import TaskFilter
 from task_manager.tasks.models import (
     Task,
     TaskLabel,
 )
+
 from task_manager.tasks.middleware import DeletePermissionRequiredMixin
 from task_manager.labels.models import (
     Label,
@@ -25,24 +27,13 @@ from task_manager.users.middleware import (
 class TasksListView(AuthRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         all_tasks = Task.objects.all()
-
-        # todo сделать более оптимальную реализацию
-        if request.GET.get("status"):
-            print(request.GET.get("status"))
-            all_tasks = all_tasks.filter(status_id=request.GET.get("status", None))
-        if request.GET.get("executor"):
-            all_tasks = all_tasks.filter(executor_id=request.GET.get("executor", None))
-        if request.GET.get("label"):
-            all_tasks = all_tasks.filter(labels__id=request.GET.get("label", None))
-        if request.GET.get("only_my_tasks") == "on":
-            all_tasks = all_tasks.filter(author_id=request.user.id)
-
+        tasks_filter = TaskFilter(request.GET, queryset=all_tasks, request=request)
         return render(
             request,
             "tasks/index.html",
             context={
-                "tasks": all_tasks,
-                "form": FilterPanelForm(request.GET),
+                "tasks_filter": tasks_filter,
+                "tasks": tasks_filter.qs,
             }
         )
 

@@ -1,6 +1,5 @@
 from django.db.models import Value
 from django import forms
-from django.template.defaulttags import widthratio
 
 from task_manager.statuses.models import Status
 from task_manager.labels.models import Label
@@ -63,52 +62,3 @@ class TaskForm(forms.Form):
         })
     )
     labels.label_from_instance = lambda obj: f"{obj.name}"
-
-
-class FilterPanelForm(forms.Form):
-    status = forms.ModelChoiceField(
-        required=False,
-        label="Статус",
-        queryset=Status.objects.all(),
-        widget=forms.Select(attrs={
-            "class": "form-control",
-            "id": "id_status",
-        })
-    )
-    status.label_from_instance = lambda obj: f"{obj.name}"
-
-    executor = forms.ModelChoiceField(
-        required=False,
-        label="Исполнитель",
-        queryset=User.objects.all().annotate(
-            full_name=Concat(
-                "first_name",
-                Value(" "),
-                "last_name",
-            )),
-        widget=forms.Select(attrs={
-            "class": "form-control",
-            "id": "id_status",
-        })
-    )
-    executor.label_from_instance = lambda obj: f"{obj.full_name}"
-
-    label = forms.ModelChoiceField(
-        required=False,
-        label="Метка",
-        queryset=Label.objects.all(),
-        widget=forms.Select(attrs={
-            "class": "form-control",
-            "id": "id_labels",
-        })
-    )
-    label.label_from_instance = lambda obj: f"{obj.name}"
-
-    only_my_tasks = forms.BooleanField(
-        required=False,
-        label="Только мои задачи",
-        widget=forms.CheckboxInput(attrs={
-            "class": "form-check-input",
-            "id": "id_only_my_tasks",
-        })
-    )

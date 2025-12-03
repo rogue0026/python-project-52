@@ -2,18 +2,12 @@
     <form method="get" action="{% url 'tasks_list_view' %}">
         {% csrf_token %}
         <h1 class="h3 mb-3 fw-normal">Фильтр</h1>
-        {% for field in form %}
-        <div class="form-group mb-2">
-            <label class="form-label">{{ field.label }}</label>
-            {{ field }}
-            {% if field.errors %}
-            {% for error in field.errors %}
-            <p class="text-danger">{{ error }}</p>
-            {% endfor %}
-            {% endif %}
-        </div>
+        {% for field in tasks_filter.form %}
+            <div class="form-group">
+                <label for="id_{{ field.name }}">{{ field.label }}</label>
+                {{ field }}
+            </div>
         {% endfor %}
         <button class="btn btn-primary mt-2" type="submit">Показать</button>
-        <button class="btn btn-primary mt-2" type="reset">Сбросить фильтры</button>
     </form>
 </main>
