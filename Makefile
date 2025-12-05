@@ -6,12 +6,12 @@ build:
 collectstatic:
 	echo 'stub for collectstatic'
 
-.PHONY: makemigrations
-makemigrations:
+.PHONY: gen_migrations
+gen_migrations:
 	uv run manage.py makemigrations
 
-.PHONY: migrate
-migrate: makemigrations
+.PHONY: run_migrations
+run_migrations: gen_migrations
 	uv run manage.py migrate
 
 .PHONY: dev
