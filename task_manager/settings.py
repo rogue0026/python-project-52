@@ -71,7 +71,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'task_manager.urls'
 
-TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'task_manager/templates')
 
 LOGIN_URL = 'users/login/'
 
