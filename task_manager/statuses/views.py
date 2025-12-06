@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render, reverse
 from django.views import View
-
+from django.db.models import ProtectedError
 from task_manager.statuses.forms import StatusForm
 from task_manager.statuses.models import Status
 from task_manager.users.middleware import AuthRequiredMixin
@@ -116,8 +116,18 @@ class DeleteStatusView(View):
     def post(self, request, *args, **kwargs):
         # todo добавить проверку на наличие связей с имеющимися задачами
         status_id = int(kwargs.get("pk"))
-        status = Status.objects.get(id=status_id)
-        status.delete()
+
+        try:
+            status = Status.objects.get(id=status_id)
+            status.delete()
+        except ProtectedError:
+            messages.error(
+                request,
+                "Невозможно удалить статус, потому что он используется",
+                extra_tags="alert alert-danger",
+            )
+            return redirect(reverse("statuses_list_view"))
+
         messages.success(
             request,
             "Статус успешно удален",
