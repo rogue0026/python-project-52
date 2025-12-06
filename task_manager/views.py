@@ -35,7 +35,7 @@ class LoginView(View):
         if not usr:
             messages.error(
                 request,
-                "Неверное имя пользователя или пароль",
+                "Пожалуйста, введите правильные имя пользователя и пароль. Оба поля могут быть чувствительны к регистру.",
                 extra_tags="alert alert-danger",
             )
             form = LoginForm(request.POST)
@@ -45,7 +45,6 @@ class LoginView(View):
                 context={
                     "form": form,
                 },
-                status=422,
             )
         login(request, usr)
         messages.success(
