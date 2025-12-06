@@ -50,7 +50,7 @@ class LoginView(View):
         login(request, usr)
         messages.success(
             request,
-            "Вход в систему выполнен",
+            "Вы залогинены",
             extra_tags="alert alert-success",
         )
         return redirect(reverse("start_page"))
@@ -61,7 +61,7 @@ class LogoutView(View):
         logout(request)
         messages.success(
             request,
-            "Вы вышли из системы",
+            "Вы разлогинены",
             "alert alert-success",
         )
         return redirect(reverse("start_page"))
