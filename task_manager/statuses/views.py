@@ -114,7 +114,6 @@ class DeleteStatusView(View):
         )
 
     def post(self, request, *args, **kwargs):
-        # todo добавить проверку на наличие связей с имеющимися задачами
         status_id = int(kwargs.get("pk"))
 
         try:
