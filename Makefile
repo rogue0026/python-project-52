@@ -6,12 +6,20 @@ build:
 collectstatic:
 	echo 'stub for collectstatic'
 
-.PHONY: gen_migrations
-gen_migrations:
+.PHONY: create_venv
+create_venv:
+	uv venv
+
+.PHONY: activate_venv
+activate_venv:
+	source .venv/bin/activate
+
+.PHONY: create_migrations
+create_migrations:
 	uv run manage.py makemigrations
 
 .PHONY: run_migrations
-run_migrations: gen_migrations
+run_migrations:
 	uv run manage.py migrate
 
 .PHONY: dev
@@ -22,10 +30,10 @@ dev:
 render-start:
 	gunicorn task_manager.wsgi
 
-.PHONY: install
-install:
-	uv sync
-
 .PHONY: lint
 lint:
 	@uv run ruff check --fix task_manager/
+
+.PHONY: install
+install:
+	uv sync
