@@ -23,7 +23,7 @@
                 </li>
                 {% if not user.is_authenticated %}
                 <li class="nav-item">
-                    <a href="{% url 'login_view' %}" class="nav-link">Вход</a>
+                    <a href="{% url 'login' %}" class="nav-link">Вход</a>
                 </li>
                 <li class="nav-item">
                     <a href="{% url 'registration_view' %}" class="nav-link">Регистрация</a>
@@ -40,7 +40,7 @@
                     <a href="{% url 'tasks_list_view' %}" class="nav-link">Задачи</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url 'logout_view' %}" class="nav-link">Выход</a>
+                    <a href="{% url 'logout' %}" class="nav-link">Выход</a>
                 </li>
                 {% endif %}
             </ul>

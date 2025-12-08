@@ -1,8 +1,8 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import logout
+from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import redirect, render, reverse
 from django.views import View
-
 from task_manager.forms import LoginForm
 
 
@@ -14,48 +14,33 @@ class IndexView(View):
         )
 
 
-class LoginView(View):
-    def get(self, request, *args, **kwargs):
-        form = LoginForm()
-        return render(
-            request,
-            "users/login.html",
-            context={
-                "form": form,
-            },
+class Login(LoginView):
+
+    template_name="login.html"
+    redirect_authenticated_user = True
+    authentication_form = LoginForm
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            "Пожалуйста, введите правильные имя пользователя и пароль. Оба поля могут быть чувствительны к регистру.",
+            extra_tags="alert alert-danger",
         )
+        return self.render_to_response(self.get_context_data(form=form))
 
-    def post(self, request, *args, **kwargs):
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        usr = authenticate(
-            username=username,
-            password=password,
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Вы залогинены",
+            extra_tags="alert alert-success",
         )
-        if not usr:
-            messages.error(
-                request,
-                "Пожалуйста, введите правильные имя пользователя и пароль. Оба поля могут быть чувствительны к регистру.",
-                extra_tags="alert alert-danger",
-            )
-            form = LoginForm(request.POST)
-            return render(
-                request,
-                "users/login.html",
-                context={
-                    "form": form,
-                },
-            )
-        # login(request, usr)
-        # messages.success(
-        #     request,
-        #     "Вы залогинены",
-        #     extra_tags="alert alert-success",
-        # )
-        return redirect(reverse("start_page"))
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("start_page")
 
 
-class LogoutView(View):
+class Logout(View):
     def get(self, request):
         logout(request)
         messages.success(
@@ -64,3 +49,4 @@ class LogoutView(View):
             "alert alert-success",
         )
         return redirect(reverse("start_page"))
+

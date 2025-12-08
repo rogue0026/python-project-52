@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container">
     <main class="form-signin w-25 m-auto">
-    <form action="{% url 'login_view' %}" method="post">
+    <form action="{% url 'login' %}" method="post">
         {% csrf_token %}
         <h1 class="h3 mb-3 fw-normal">Вход</h1>
         {% for field in form %}

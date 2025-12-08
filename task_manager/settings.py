@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 
 import dj_database_url
+from django.conf.global_settings import LOGIN_REDIRECT_URL, LOGOUT_REDIRECT_URL
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -74,6 +75,8 @@ ROOT_URLCONF = 'task_manager.urls'
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'task_manager/templates')
 
 LOGIN_URL = 'users/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 ROLLBAR = {
     'access_token': os.getenv("ROLLBAR_TOKEN"),
