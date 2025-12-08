@@ -74,9 +74,9 @@ ROOT_URLCONF = 'task_manager.urls'
 
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'task_manager/templates')
 
-LOGIN_URL = 'users/login/'
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = 'login_view'
+LOGIN_REDIRECT_URL = 'start_page'
+LOGOUT_REDIRECT_URL = 'start_page'
 
 ROLLBAR = {
     'access_token': os.getenv("ROLLBAR_TOKEN"),
