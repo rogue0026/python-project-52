@@ -40,13 +40,13 @@ class Login(LoginView):
         return reverse("start_page")
 
 
-class Logout(View):
-    def get(self, request):
-        logout(request)
+class Logout(LogoutView):
+    template_name = "logout.html"
+
+    def post(self, request, *args, **kwargs):
         messages.success(
             request,
             "Вы разлогинены",
-            "alert alert-success",
+            extra_tags="alert alert-success",
         )
-        return redirect(reverse("start_page"))
-
+        return super().post(request, *args, **kwargs)

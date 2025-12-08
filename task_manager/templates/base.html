@@ -40,7 +40,7 @@
                     <a href="{% url 'tasks_list_view' %}" class="nav-link">Задачи</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url 'logout_view' %}" class="nav-link">Выход</a>
+                    {% include 'logout.html' %}
                 </li>
                 {% endif %}
             </ul>
