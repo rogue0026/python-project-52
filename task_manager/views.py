@@ -46,12 +46,12 @@ class LoginView(View):
                     "form": form,
                 },
             )
-        login(request, usr)
-        messages.success(
-            request,
-            "Вы залогинены",
-            extra_tags="alert alert-success",
-        )
+        # login(request, usr)
+        # messages.success(
+        #     request,
+        #     "Вы залогинены",
+        #     extra_tags="alert alert-success",
+        # )
         return redirect(reverse("start_page"))
 
 
