@@ -17,7 +17,7 @@ class IndexView(View):
 class Login(LoginView):
 
     template_name="login.html"
-    redirect_authenticated_user = True
+    redirect_authenticated_user = False
     authentication_form = LoginForm
 
     def form_invalid(self, form):
@@ -35,9 +35,6 @@ class Login(LoginView):
             extra_tags="alert alert-success",
         )
         return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse("start_page")
 
 
 class Logout(LogoutView):
