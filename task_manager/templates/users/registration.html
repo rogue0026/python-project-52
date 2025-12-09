@@ -7,7 +7,7 @@
             <h1 class="h3 mb-3 fw-normal">Регистрация</h1>
             {% for field in form %}
             <div class="form-group">
-                <label class="form-label">{{ field.label }}</label>
+                {{ field.label_tag }}
                 {{ field }}
                 {% if field.errors %}
                 {% for error in field.errors %}
