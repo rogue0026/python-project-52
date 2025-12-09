@@ -59,7 +59,7 @@ class UserRegistrationView(View):
             first_name=request.POST.get("first_name"),
             last_name=request.POST.get("last_name"),
         )
-        usr.set_password(request.POST.get("password"))
+        usr.set_password(request.POST.get("password1"))
         usr.save()
         messages.success(
             request,
@@ -106,7 +106,7 @@ class UpdateUserView(AuthRequiredMixin, EditPermissionRequiredMixin, View):
         usr.first_name = form.cleaned_data["first_name"]
         usr.last_name = form.cleaned_data["last_name"]
         usr.username = form.cleaned_data["username"]
-        usr.set_password(form.cleaned_data["password"])
+        usr.set_password(form.cleaned_data["password1"])
         usr.save()
 
         messages.success(
