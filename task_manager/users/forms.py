@@ -3,8 +3,8 @@ from django import forms
 
 class RegistrationForm(forms.Form):
     first_name = forms.CharField(
-        label="Имя:",
-        required=True,
+        label="Имя",
+        required=False,
         widget=forms.TextInput(attrs={
             "class": "form-control",
             "placeholder": "Имя",
@@ -14,8 +14,8 @@ class RegistrationForm(forms.Form):
     )
 
     last_name = forms.CharField(
-        label="Фамилия:",
-        required=True,
+        label="Фамилия",
+        required=False,
         widget=forms.TextInput(attrs={
              "class": "form-control",
              "placeholder": "Фамилия",
@@ -24,7 +24,7 @@ class RegistrationForm(forms.Form):
     )
 
     username = forms.CharField(
-        label="Имя пользователя:",
+        label="Имя пользователя",
         required=True,
         max_length=150,
         widget=forms.TextInput(attrs={
@@ -46,7 +46,7 @@ class RegistrationForm(forms.Form):
     )
 
     password2 = forms.CharField(
-        label="Подтверждение пароля:",
+        label="Подтверждение пароля",
         required=False,
         min_length=3,
         widget=forms.TextInput(attrs={
