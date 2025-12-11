@@ -16,7 +16,7 @@ class RegistrationForm(forms.Form):
 
     last_name = forms.CharField(
         label="Фамилия",
-        required=False,
+        required=True,
         widget=forms.TextInput(attrs={
              "class": "form-control",
              "placeholder": "Фамилия",
@@ -37,7 +37,7 @@ class RegistrationForm(forms.Form):
 
     password1 = forms.CharField(
         label="Пароль",
-        required=False,
+        required=True,
         min_length=3,
         widget=forms.TextInput(attrs={
             "class": "form-control",
@@ -48,7 +48,7 @@ class RegistrationForm(forms.Form):
 
     password2 = forms.CharField(
         label="Подтверждение пароля",
-        required=False,
+        required=True,
         min_length=3,
         widget=forms.TextInput(attrs={
             "class": "form-control mb-3",
