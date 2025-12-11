@@ -10,12 +10,12 @@
             <th>Действия</th>
         </thead>
         <tbody>
-            {% for user in users %}
+            {% for user in object_list %}
                 <tr>
                     <td>{{ user.id }}</td>
                     <td>{{ user.username }}</td>
                     <td>{{ user.full_name }}</td>
-                    <td>{{ user.date_joined }}</td>
+                    <td>{{ user.date_joined|date:"d.m.Y H:i" }}</td>
                     <td class="text-center">
                         <a href="{% url 'update_view' user.id %}">Изменить</a>
                         <br>

@@ -2,7 +2,9 @@ from django import forms
 
 
 class RegistrationForm(forms.Form):
+
     first_name = forms.CharField(
+        label_suffix="",
         max_length=150,
         label="Имя",
         required=True,
@@ -15,6 +17,7 @@ class RegistrationForm(forms.Form):
     )
 
     last_name = forms.CharField(
+        label_suffix="",
         label="Фамилия",
         required=True,
         widget=forms.TextInput(attrs={
@@ -25,6 +28,7 @@ class RegistrationForm(forms.Form):
     )
 
     username = forms.CharField(
+        label_suffix="",
         label="Имя пользователя",
         required=True,
         max_length=150,
@@ -36,10 +40,12 @@ class RegistrationForm(forms.Form):
     )
 
     password1 = forms.CharField(
+        label_suffix="",
         label="Пароль",
         required=True,
         min_length=3,
         widget=forms.TextInput(attrs={
+            "autocomplete": "new-password",
             "class": "form-control",
             "type": "password",
             "id": "id_password1",
@@ -47,10 +53,12 @@ class RegistrationForm(forms.Form):
     )
 
     password2 = forms.CharField(
+        label_suffix="",
         label="Подтверждение пароля",
         required=True,
         min_length=3,
         widget=forms.TextInput(attrs={
+            "autocomplete": "new-password",
             "class": "form-control mb-3",
             "type": "password",
             "id": "id_password2",

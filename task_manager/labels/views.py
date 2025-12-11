@@ -1,8 +1,8 @@
-
 from django.contrib import messages
 from django.db.models import ProtectedError
 from django.shortcuts import redirect, render, reverse
 from django.views import View
+from django.views.generic.list import ListView
 
 from task_manager.labels.forms import LabelForm
 from task_manager.labels.models import Label
@@ -11,16 +11,9 @@ from task_manager.users.middleware import (
 )
 
 
-class LabelListView(AuthRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        all_labels = Label.objects.all()
-        return render(
-            request,
-            "labels/index.html",
-            context={
-                "labels": all_labels,
-            },
-        )
+class LabelListView(AuthRequiredMixin, ListView):
+    model = Label
+    template_name = "labels/index.html"
 
 
 class CreateLabelView(AuthRequiredMixin, View):

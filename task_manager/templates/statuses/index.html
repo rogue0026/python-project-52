@@ -10,11 +10,11 @@
             <th>Действия</th>
         </thead>
         <tbody>
-            {% for status in statuses %}
+            {% for status in object_list %}
                 <tr>
                     <td>{{ status.id }}</td>
                     <td>{{ status.name }}</td>
-                    <td>{{ status.created_at }}</td>
+                    <td>{{ status.created_at|date:"d.m.Y H:i" }}</td>
                     <td class="text-center">
                         <a href="{% url 'statuses_update_view' status.id %}">Изменить</a>
                         <br>

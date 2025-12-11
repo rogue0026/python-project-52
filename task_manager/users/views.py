@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic.edit import View
+from django.views.generic.list import ListView
 
 from task_manager.users.forms import RegistrationForm
 from task_manager.users.middleware import (
@@ -10,26 +11,9 @@ from task_manager.users.middleware import (
     EditPermissionRequiredMixin,
 )
 
-
-class UserListView(View):
-    def get(self, request, *args, **kwargs):
-        all_users = User.objects.all()
-        users = []
-        for u in all_users:
-            users.append({
-                "id": u.id,
-                "username": u.username,
-                "full_name": f"{u.first_name} {u.last_name}".strip(),
-                "date_joined": u.date_joined.strftime("%d.%m.%Y %H:%M"),
-            })
-
-        return render(
-            request,
-            "users/index.html",
-            context={
-                "users": users,
-            }
-        )
+class UserListView(ListView):
+    template_name = "users/index.html"
+    model = User
 
 
 class UserRegistrationView(View):

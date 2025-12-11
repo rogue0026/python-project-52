@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.views.generic.list import ListView
 from django.shortcuts import redirect, render, reverse
 from django.views import View
 from django.db.models import ProtectedError
@@ -7,24 +8,9 @@ from task_manager.statuses.models import Status
 from task_manager.users.middleware import AuthRequiredMixin
 
 
-class StatusesListView(AuthRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        all_statuses = Status.objects.all()
-        formatted_statuses = []
-        for status in all_statuses:
-            formatted_statuses.append({
-                "id": status.id,
-                "name": status.name,
-                "created_at": status.created_at.strftime("%d.%m.%Y %H:%M"),
-            })
-
-        return render(
-            request,
-            "statuses/index.html",
-            context={
-                "statuses": formatted_statuses,
-            },
-        )
+class StatusesListView(AuthRequiredMixin, ListView):
+    template_name = "statuses/index.html"
+    model = Status
 
 
 class CreateStatusView(View):

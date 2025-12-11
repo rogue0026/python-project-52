@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.db import transaction
+from django.views.generic.list import ListView
 from django.shortcuts import (
     redirect,
     render,
@@ -22,24 +23,9 @@ from task_manager.users.middleware import (
 )
 
 
-class TasksListView(AuthRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        all_tasks = Task.objects.all()
-
-        tasks_filter = TaskFilter(
-            request.GET,
-            queryset=all_tasks,
-            request=request,
-        )
-
-        return render(
-            request,
-            "tasks/index.html",
-            context={
-                "tasks_filter": tasks_filter,
-                "tasks": tasks_filter.qs,
-            }
-        )
+class TasksListView(AuthRequiredMixin, ListView):
+    template_name = "tasks/index.html"
+    model = Task
 
 
 class CreateTaskView(AuthRequiredMixin, View):
