@@ -14,7 +14,7 @@
                 <tr>
                     <td>{{ user.id }}</td>
                     <td>{{ user.username }}</td>
-                    <td>{{ user.full_name }}</td>
+                    <td>{{ user.first_name|add:" "|add:user.last_name }}</td>
                     <td>{{ user.date_joined|date:"d.m.Y H:i" }}</td>
                     <td class="text-center">
                         <a href="{% url 'update_view' user.id %}">Изменить</a>
