@@ -3,7 +3,6 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render
 from django.views import View
 from task_manager.forms import LoginForm
-from django.shortcuts import redirect
 
 
 class IndexView(View):
@@ -18,7 +17,7 @@ class Login(LoginView):
 
     template_name="login.html"
     redirect_authenticated_user = False
-    authentication_form = LoginForm
+    form_class = LoginForm
 
     def form_invalid(self, form):
         messages.error(
@@ -26,7 +25,6 @@ class Login(LoginView):
             "Пожалуйста, введите правильные имя пользователя и пароль. Оба поля могут быть чувствительны к регистру.",
             extra_tags="alert alert-danger",
         )
-
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):

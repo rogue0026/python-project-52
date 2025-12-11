@@ -4,6 +4,8 @@ from django.contrib.auth.forms import AuthenticationForm
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(
+        label_suffix="",
+        required=True,
         label="Имя пользователя",
         widget=forms.TextInput(attrs={
             "class": "form-control",
@@ -13,6 +15,8 @@ class LoginForm(AuthenticationForm):
     )
 
     password = forms.CharField(
+        label_suffix="",
+        required=True,
         label="Пароль",
         widget=forms.TextInput(attrs={
             "type": "password",
