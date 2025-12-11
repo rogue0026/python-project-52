@@ -4,7 +4,7 @@ from django import forms
 class RegistrationForm(forms.Form):
     first_name = forms.CharField(
         max_length=150,
-        label="Имя:",
+        label="Имя :",
         required=True,
         widget=forms.TextInput(attrs={
             "class": "form-control",
