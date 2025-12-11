@@ -4,12 +4,12 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic.edit import View
 from django.views.generic.list import ListView
-
 from task_manager.users.forms import RegistrationForm
 from task_manager.users.middleware import (
     AuthRequiredMixin,
     EditPermissionRequiredMixin,
 )
+
 
 class UserListView(ListView):
     template_name = "users/index.html"
