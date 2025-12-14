@@ -50,7 +50,7 @@ class TaskFilter(FilterSet):
         label_suffix="",
         method="filter_only_my_tasks",
         widget=forms.CheckboxInput(attrs={
-            "id": "id_only_my_tasks",
+            "id": "id_self_tasks",
             "class": "form-check-input",
         }),
     )
