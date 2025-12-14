@@ -19,64 +19,63 @@ class UserListView(ListView):
     model = User
 
 
-class UserRegistrationView(FormView):
-    form_class = RegistrationForm
-    success_url = reverse_lazy("login_view")
-    template_name = "users/registration.html"
-
-    def form_valid(self, form):
-        print("PING")
-        usr = User.objects.create_user(
-            first_name=form.cleaned_data["first_name"],
-            last_name=form.cleaned_data["last_name"],
-            username=form.cleaned_data["username"],
-        )
-        usr.set_password(form.cleaned_data["password1"])
-        usr.save()
-
-        messages.success(
-            self.request,
-            "Пользователь успешно зарегистрирован",
-            extra_tags="alert alert-success",
-        )
-        return super().form_valid(form)
-
-
-# class UserRegistrationView(View):
-#     def get(self, request, *args, **kwargs):
-#         registration_form = RegistrationForm()
-#         return render(
-#             request,
-#             "users/registration.html",
-#             context={
-#                 "form": registration_form,
-#             }
-#         )
+# class UserRegistrationView(FormView):
+#     form_class = RegistrationForm
+#     success_url = reverse_lazy("login_view")
+#     template_name = "users/registration.html"
 #
-#     def post(self, request, *args, **kwargs):
-#         reg_form = RegistrationForm(request.POST)
-#         if not reg_form.is_valid():
-#             return render(
-#                 request,
-#                 "users/registration.html",
-#                 context={
-#                     "form": reg_form,
-#                 },
-#                 status=422,
-#             )
+#     def form_valid(self, form):
 #         usr = User.objects.create_user(
-#             username=request.POST.get("username"),
-#             first_name=request.POST.get("first_name"),
-#             last_name=request.POST.get("last_name"),
+#             first_name=form.cleaned_data["first_name"],
+#             last_name=form.cleaned_data["last_name"],
+#             username=form.cleaned_data["username"],
 #         )
-#         usr.set_password(request.POST.get("password1"))
+#         usr.set_password(form.cleaned_data["password1"])
 #         usr.save()
+#
 #         messages.success(
-#             request,
+#             self.request,
 #             "Пользователь успешно зарегистрирован",
-#             "alert alert-success",
+#             extra_tags="alert alert-success",
 #         )
-#         return redirect(reverse("login_view"))
+#         return super().form_valid(form)
+
+
+class UserRegistrationView(View):
+    def get(self, request, *args, **kwargs):
+        registration_form = RegistrationForm()
+        return render(
+            request,
+            "users/registration.html",
+            context={
+                "form": registration_form,
+            }
+        )
+
+    def post(self, request, *args, **kwargs):
+        reg_form = RegistrationForm(request.POST)
+        if not reg_form.is_valid():
+            return render(
+                request,
+                "users/registration.html",
+                context={
+                    "form": reg_form,
+                },
+                status=422,
+            )
+        usr = User.objects.create_user(
+            username=request.POST.get("username"),
+            first_name=request.POST.get("first_name"),
+            last_name=request.POST.get("last_name"),
+        )
+        usr.set_password(request.POST.get("password1"))
+        usr.save()
+        messages.success(
+            request,
+            "Пользователь успешно зарегистрирован",
+            "alert alert-success",
+        )
+        return redirect(reverse("login_view"))
 
 
 class UpdateUserView(AuthRequiredMixin, EditPermissionRequiredMixin, UpdateView):
