@@ -78,19 +78,29 @@ class UserRegistrationView(View):
         return redirect(reverse("login_view"))
 
 
-class UpdateUserView(AuthRequiredMixin, EditPermissionRequiredMixin, UpdateView):
-    login_url = reverse_lazy("login_view")
+class UpdateUserView(AuthRequiredMixin, EditPermissionRequiredMixin, FormView):
     template_name = "users/update.html"
     form_class = RegistrationForm
+
+    login_url = reverse_lazy("login_view")
     success_url = reverse_lazy("users_list_view")
 
     def form_valid(self, form):
-        self.object.first_name = form.cleaned_data["first_name"]
-        self.object.last_name = form.cleaned_data["last_name"]
-        self.object.username = form.cleaned_data["username"]
-        self.object.password1 = form.cleaned_data["password1"]
-        self.object.password2 = form.cleaned_data["password2"]
-        self.object.save()
+        user_id = self.kwargs.get("pk")
+        existing_user = User.objects.get(id=user_id)
+
+        existing_user.first_name = form.cleaned_data["first_name"]
+        existing_user.last_name = form.cleaned_data["last_name"]
+        existing_user.username = form.cleaned_data["username"]
+        existing_user.set_password(form.cleaned_data["password1"])
+        existing_user.save()
+
+        messages.success(
+            self.request,
+            "Пользовательские данные успешно обновлены",
+            extra_tags="alert alert-success",
+        )
+
         return super().form_valid(form)
 
 
