@@ -1,10 +1,9 @@
 <main class="form-signin m-auto mb-5">
     <form method="get" action="{% url 'tasks_list_view' %}">
         {% csrf_token %}
-        <h1 class="h3 mb-3 fw-normal">Фильтр</h1>
-        {% for field in tasks_filter.form %}
+        {% for field in task_filter.form %}
             <div class="form-group">
-                <label for="id_{{ field.name }}">{{ field.label }}</label>
+                {{ field.label_tag }}
                 {{ field }}
             </div>
         {% endfor %}

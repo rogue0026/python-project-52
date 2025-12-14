@@ -25,9 +25,25 @@ from task_manager.users.middleware import (
 )
 
 
-class TasksListView(AuthRequiredMixin, ListView):
-    template_name = "tasks/index.html"
-    model = Task
+class TasksListView(AuthRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        all_tasks = Task.objects.all()
+
+        task_filter = TaskFilter(
+            request.GET,
+            queryset=all_tasks,
+            request=request
+        )
+
+        return render(
+            request,
+            "tasks/index.html",
+            context={
+                "task_filter": task_filter,
+                "tasks": task_filter.qs,
+            }
+        )
+
 
 class CreateTaskView(AuthRequiredMixin, FormView):
     template_name = "tasks/create.html"
