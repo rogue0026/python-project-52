@@ -80,10 +80,22 @@ class UserRegistrationView(View):
 
 class UpdateUserView(AuthRequiredMixin, EditPermissionRequiredMixin, FormView):
     template_name = "users/update.html"
-    form_class = RegistrationForm
 
     login_url = reverse_lazy("login_view")
     success_url = reverse_lazy("users_list_view")
+
+    def get_initial(self):
+        user_id = self.kwargs.get("pk")
+        existing_user = User.objects.get(id=user_id)
+
+        return {
+            "first_name": existing_user.first_name,
+            "last_name": existing_user.last_name,
+            "username": existing_user.username,
+        }
+
+    def get_form_class(self):
+        return RegistrationForm
 
     def form_valid(self, form):
         user_id = self.kwargs.get("pk")
