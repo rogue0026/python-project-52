@@ -11,6 +11,7 @@ from task_manager.statuses.models import Status
 class TaskFilter(FilterSet):
     status = ModelChoiceFilter(
         label="Статус",
+        label_suffix="",
         queryset=Status.objects.all(),
         widget=forms.Select(attrs={
             "id": "id_status",
@@ -20,6 +21,7 @@ class TaskFilter(FilterSet):
 
     executor = ModelChoiceFilter(
         label="Исполнитель",
+        label_suffix="",
         queryset=User.objects.all().annotate(
             full_name=Concat(
                 "first_name",
@@ -34,6 +36,7 @@ class TaskFilter(FilterSet):
 
     label = ModelChoiceFilter(
         label="Метка",
+        label_suffix="",
         field_name="labels",
         queryset=Label.objects.all(),
         widget=forms.Select(attrs={
@@ -44,6 +47,7 @@ class TaskFilter(FilterSet):
 
     only_my_tasks = BooleanFilter(
         label="Только свои задачи",
+        label_suffix="",
         method="filter_only_my_tasks",
         widget=forms.CheckboxInput(attrs={
             "id": "id_only_my_tasks",
