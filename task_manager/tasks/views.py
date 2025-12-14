@@ -1,6 +1,8 @@
 from django.contrib import messages
 from django.db import transaction
+from django.urls import reverse_lazy
 from django.views.generic.list import ListView
+from django.views.generic.edit import FormView
 from django.shortcuts import (
     redirect,
     render,
@@ -27,40 +29,23 @@ class TasksListView(AuthRequiredMixin, ListView):
     template_name = "tasks/index.html"
     model = Task
 
+class CreateTaskView(AuthRequiredMixin, FormView):
+    template_name = "tasks/create.html"
+    success_url = reverse_lazy("tasks_list_view")
 
-class CreateTaskView(AuthRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        form = TaskForm()
-        return render(
-            request,
-            "tasks/create.html",
-            context={
-                "form": form,
-            }
-        )
+    def get_form_class(self):
+        return TaskForm
 
-    def post(self, request, *args, **kwargs):
-        form = TaskForm(request.POST)
-        if not form.is_valid():
-            return render(
-                request,
-                "tasks/create.html",
-                context={
-                    "form": form,
-                },
-                status=422,
-            )
-
+    def form_valid(self, form):
         with transaction.atomic():
             task = Task(
                 name=form.cleaned_data["name"],
                 description=form.cleaned_data["description"],
                 status=form.cleaned_data["status"],
                 executor=form.cleaned_data["executor"],
-                author_id=request.user.id,
+                author_id=self.request.user.id,
             )
             task.save()
-
             labels = form.cleaned_data.get("labels")
             labels_ids = labels.values_list("id", flat=True)
             task_labels = [TaskLabel(
@@ -69,53 +54,45 @@ class CreateTaskView(AuthRequiredMixin, View):
             ) for label_id in labels_ids]
             TaskLabel.objects.bulk_create(task_labels)
             messages.success(
-                request,
+                self.request,
                 "Задача успешно создана",
                 extra_tags="alert alert-success",
             )
+            return super().form_valid(form)
 
-        return redirect(reverse("tasks_list_view"))
 
+class UpdateTaskView(AuthRequiredMixin, FormView):
+    template_name = "tasks/update.html"
+    success_url = reverse_lazy("tasks_list_view")
 
-class UpdateTaskView(AuthRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        task_id = int(kwargs.get("pk"))
+    def get_form_class(self):
+        return TaskForm
+
+    def get_initial(self):
+        task_id = self.kwargs.get("pk")
         task = Task.objects.get(id=task_id)
 
         labels_ids = TaskLabel.objects.filter(
             task_id=task_id).values_list("label_id", flat=True)
-
         linked_labels = Label.objects.filter(id__in=labels_ids)
 
-        form = TaskForm({
+        return {
             "name": task.name,
             "description": task.description,
             "status": task.status,
             "executor": task.executor,
             "labels": linked_labels,
-        })
+        }
 
-        return render(
-            request,
-            "tasks/update.html",
-            context={
-                "form": form,
-            },
-        )
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["task_id"] = self.kwargs.get("pk")
 
-    def post(self, request, *args, **kwargs):
-        form = TaskForm(request.POST)
-        if not form.is_valid():
-            return render(
-                request,
-                "users/update.html",
-                context={
-                    "form": form,
-                },
-                status=422,
-            )
+        return context
 
-        task_id = int(kwargs.get("pk"))
+    def form_valid(self, form):
+        task_id = int(self.kwargs.get("pk"))
+
         with transaction.atomic():
             # получаем таску
             task = Task.objects.get(id=task_id)
@@ -126,29 +103,104 @@ class UpdateTaskView(AuthRequiredMixin, View):
             task.status = form.cleaned_data["status"]
             task.executor = form.cleaned_data["executor"]
 
-            # удаляем старые теги
-            old_labels = task.labels_set.all()
-            print(old_labels.values())
-            old_labels.delete()
+            # чистим связи тегов с данной задачей в промежуточной таблице
+            old_tag_links = TaskLabel.objects.filter(task_id=task.id)
+            old_tag_links.delete()
 
             # получаем из формы новые теги
             labels = form.cleaned_data["labels"]
 
-            # создаем для таски новые связи с тегами
+            # создаем для таски новые связи с тегами в промежуточной таблице
             labels_ids = labels.values_list("id", flat=True)
             new_task_labels = [
                 TaskLabel(task_id=task.id, label_id=label_id,)
                 for label_id in labels_ids
             ]
             TaskLabel.objects.bulk_create(new_task_labels)
+            task.save()
 
             messages.success(
-                request,
-                "Задача успешно изменена",
+                self.request,
+            "Задача успешно изменена",
                 extra_tags="alert alert-success",
             )
 
-        return redirect(reverse("tasks_list_view"))
+            return super().form_valid(form)
+
+
+# class UpdateTaskView(AuthRequiredMixin, View):
+#     def get(self, request, *args, **kwargs):
+#         task_id = int(kwargs.get("pk"))
+#         task = Task.objects.get(id=task_id)
+#
+#         labels_ids = TaskLabel.objects.filter(
+#             task_id=task_id).values_list("label_id", flat=True)
+#
+#         linked_labels = Label.objects.filter(id__in=labels_ids)
+#
+#         form = TaskForm({
+#             "name": task.name,
+#             "description": task.description,
+#             "status": task.status,
+#             "executor": task.executor,
+#             "labels": linked_labels,
+#         })
+#
+#         return render(
+#             request,
+#             "tasks/update.html",
+#             context={
+#                 "form": form,
+#                 "task_id": task_id,
+#             },
+#         )
+#
+#     def post(self, request, *args, **kwargs):
+#         form = TaskForm(request.POST)
+#         if not form.is_valid():
+#             return render(
+#                 request,
+#                 "users/update.html",
+#                 context={
+#                     "form": form,
+#                 },
+#                 status=422,
+#             )
+#
+#         task_id = int(kwargs.get("pk"))
+#         with transaction.atomic():
+#             # получаем таску
+#             task = Task.objects.get(id=task_id)
+#
+#             # копируем имя описание статус и исполнителя
+#             task.name = form.cleaned_data["name"]
+#             task.description = form.cleaned_data["description"]
+#             task.status = form.cleaned_data["status"]
+#             task.executor = form.cleaned_data["executor"]
+#
+#             # удаляем старые теги
+#             old_labels = task.labels_set.all()
+#             print(old_labels.values())
+#             old_labels.delete()
+#
+#             # получаем из формы новые теги
+#             labels = form.cleaned_data["labels"]
+#
+#             # создаем для таски новые связи с тегами
+#             labels_ids = labels.values_list("id", flat=True)
+#             new_task_labels = [
+#                 TaskLabel(task_id=task.id, label_id=label_id,)
+#                 for label_id in labels_ids
+#             ]
+#             TaskLabel.objects.bulk_create(new_task_labels)
+#
+#             messages.success(
+#                 request,
+#                 "Задача успешно изменена",
+#                 extra_tags="alert alert-success",
+#             )
+#
+#         return redirect(reverse("tasks_list_view"))
 
 
 class DeleteTaskView(DeletePermissionRequiredMixin, View):

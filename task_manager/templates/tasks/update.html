@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 <main class="form-signin w-50 m-auto">
-        <form method="post" action="">
+        <form method="post" action="{% url 'tasks_update_view' task_id %}">
             {% csrf_token %}
             <h1 class="h3 mb-3 fw-normal">Изменение задачи</h1>
             {% for field in form %}
             <div class="form-group">
-                <label class="form-label">{{ field.label }}</label>
+                {{ field.label_tag }}
                 {{ field }}
                 {% if field.errors %}
                 {% for error in field.errors %}
