@@ -115,7 +115,7 @@ class UpdateUserView(AuthRequiredMixin, EditPermissionRequiredMixin, FormView):
 
         messages.success(
             self.request,
-            "Пользовательские данные успешно обновлены",
+            "Пользователь успешно изменен",
             extra_tags="alert alert-success",
         )
 
