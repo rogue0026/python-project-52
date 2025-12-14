@@ -36,38 +36,6 @@ class CreateLabelView(AuthRequiredMixin, FormView):
         return super().form_valid(form)
 
 
-# class CreateLabelView(AuthRequiredMixin, View):
-#     def get(self, request, *args, **kwargs):
-#         form = LabelForm()
-#         return render(
-#             request,
-#             "labels/create.html",
-#             context={
-#                 "form": form,
-#             },
-#         )
-#
-#     def post(self, request, *args, **kwargs):
-#         form = LabelForm(request.POST)
-#         if not form.is_valid():
-#             return render(
-#                 request,
-#                 "labels/create.html",
-#                 context={
-#                     "form": form,
-#                 },
-#                 status=422,
-#             )
-#         label = Label.objects.create(name=form.cleaned_data["name"])
-#         label.save()
-#         messages.success(
-#             request,
-#             "Метка успешно создана",
-#             extra_tags="alert alert-success",
-#         )
-#         return redirect(reverse("labels_list_view"))
-
-
 class UpdateLabelView(AuthRequiredMixin, FormView):
     success_url = reverse_lazy("labels_list_view")
     template_name = "labels/update.html"
