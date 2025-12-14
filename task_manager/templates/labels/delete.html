@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container">
     <main class="form-signin w-25 m-auto">
-        <form action="" method="post">
+        <form action="{% url 'labels_delete_view' label_id %}" method="post">
             {% csrf_token %}
             <h1 class="h3 mb-3 fw-normal">Удаление метки</h1>
             <p>Вы действительно хотите удалить {{ label_name }}?</p>

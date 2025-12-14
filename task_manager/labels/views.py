@@ -75,48 +75,6 @@ class UpdateLabelView(AuthRequiredMixin, FormView):
         return super().form_valid(form)
 
 
-# class UpdateLabelView(AuthRequiredMixin, View):
-#     def get(self, request, *args, **kwargs):
-#         label_id = int(kwargs.get("pk"))
-#         label = Label.objects.get(id=label_id)
-#         form = LabelForm({
-#             "name": label.name,
-#         })
-#         return render(
-#             request,
-#             "labels/update.html",
-#             context={
-#                 "form": form,
-#                 "label_id": label_id,
-#             },
-#         )
-#
-#     def post(self, request, *args, **kwargs):
-#         label_id = int(kwargs.get("pk"))
-#         form = LabelForm({
-#             "name": request.POST.get("name"),
-#         })
-#         if not form.is_valid():
-#             return render(
-#                 request,
-#                 "labels/update.html",
-#                 context={
-#                     "form": form,
-#                     "label_id": label_id,
-#                 },
-#                 status=422,
-#             )
-#         label = Label.objects.get(id=label_id)
-#         label.name = form.cleaned_data["name"]
-#         label.save()
-#         messages.success(
-#             request,
-#             "Метка успешно изменена",
-#             extra_tags="alert alert-success",
-#         )
-#         return redirect(reverse("labels_list_view"))
-
-
 class DeleteLabelView(AuthRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         label_id = int(kwargs.get("pk"))
@@ -126,6 +84,7 @@ class DeleteLabelView(AuthRequiredMixin, View):
             "labels/delete.html",
             context={
                 "label_name": label.name,
+                "label_id": label_id,
             },
         )
 
