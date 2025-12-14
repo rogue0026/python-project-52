@@ -43,7 +43,7 @@ class TaskFilter(FilterSet):
     )
 
     only_my_tasks = BooleanFilter(
-        label="Только мои задачи",
+        label="Только свои задачи",
         method="filter_only_my_tasks",
         widget=forms.CheckboxInput(attrs={
             "id": "id_only_my_tasks",
