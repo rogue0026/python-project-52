@@ -2,11 +2,11 @@
 {% block content %}
     <div class="container">
         <main class="form-signin w-25 m-auto">
-            <form action="{% url 'delete_view' user_id %}" method="post">
+            <form action="{% url 'users_delete_view' user_id %}" method="post">
                 {% csrf_token %}
                 <h1 class="h3 mb-3 fw-normal">Удаление пользователя</h1>
                 <p>Вы действительно хотите удалить пользователя {{ full_name }}?</p>
-                <button class="btn btn-danger w-100" type="submit">Удалить</button>
+                <button class="btn btn-danger w-100" type="submit">Да, удалить</button>
             </form>
         </main>
     </div>
