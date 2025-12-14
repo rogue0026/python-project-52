@@ -9,6 +9,7 @@ from task_manager.statuses.models import Status
 
 class TaskForm(forms.Form):
     name = forms.CharField(
+        label_suffix="",
         label="Имя",
         required=True,
         widget=forms.TextInput(attrs={
@@ -19,6 +20,7 @@ class TaskForm(forms.Form):
         }))
 
     description = forms.CharField(
+        label_suffix="",
         label="Описание",
         widget=forms.TextInput(attrs={
             "class": "form-control",
@@ -28,6 +30,7 @@ class TaskForm(forms.Form):
     )
 
     status = forms.ModelChoiceField(
+        label_suffix="",
         label="Статус",
         queryset=Status.objects.all(),
         widget=forms.Select(attrs={
@@ -38,6 +41,7 @@ class TaskForm(forms.Form):
     status.label_from_instance = lambda obj: f"{obj.name}"
 
     executor = forms.ModelChoiceField(
+        label_suffix="",
         label="Исполнитель",
         queryset=User.objects.all().annotate(
             full_name=Concat(
@@ -54,6 +58,7 @@ class TaskForm(forms.Form):
 
     labels = forms.ModelMultipleChoiceField(
         required=False,
+        label_suffix="",
         label="Метки",
         queryset=Label.objects.all(),
         widget=forms.SelectMultiple(attrs={

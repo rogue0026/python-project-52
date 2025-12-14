@@ -1,9 +1,10 @@
 from django.contrib import messages
 from django.db.models import ProtectedError
 from django.shortcuts import redirect, render, reverse
+from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic.list import ListView
-
+from django.views.generic.edit import FormView
 from task_manager.labels.forms import LabelForm
 from task_manager.labels.models import Label
 from task_manager.users.middleware import (
@@ -16,36 +17,55 @@ class LabelListView(AuthRequiredMixin, ListView):
     template_name = "labels/index.html"
 
 
-class CreateLabelView(AuthRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        form = LabelForm()
-        return render(
-            request,
-            "labels/create.html",
-            context={
-                "form": form,
-            },
-        )
+class CreateLabelView(AuthRequiredMixin, FormView):
+    template_name = "labels/create.html"
+    success_url = reverse_lazy('labels_list_view')
 
-    def post(self, request, *args, **kwargs):
-        form = LabelForm(request.POST)
-        if not form.is_valid():
-            return render(
-                request,
-                "labels/create.html",
-                context={
-                    "form": form,
-                },
-                status=422,
-            )
-        label = Label.objects.create(name=form.cleaned_data["name"])
+    def get_form_class(self):
+        return LabelForm
+
+    def form_valid(self, form):
+        label_name = form.cleaned_data["name"]
+        label = Label.objects.create(name=label_name)
         label.save()
         messages.success(
-            request,
+            self.request,
             "Метка успешно создана",
             extra_tags="alert alert-success",
         )
-        return redirect(reverse("labels_list_view"))
+        return super().form_valid(form)
+
+
+# class CreateLabelView(AuthRequiredMixin, View):
+#     def get(self, request, *args, **kwargs):
+#         form = LabelForm()
+#         return render(
+#             request,
+#             "labels/create.html",
+#             context={
+#                 "form": form,
+#             },
+#         )
+#
+#     def post(self, request, *args, **kwargs):
+#         form = LabelForm(request.POST)
+#         if not form.is_valid():
+#             return render(
+#                 request,
+#                 "labels/create.html",
+#                 context={
+#                     "form": form,
+#                 },
+#                 status=422,
+#             )
+#         label = Label.objects.create(name=form.cleaned_data["name"])
+#         label.save()
+#         messages.success(
+#             request,
+#             "Метка успешно создана",
+#             extra_tags="alert alert-success",
+#         )
+#         return redirect(reverse("labels_list_view"))
 
 
 class UpdateLabelView(AuthRequiredMixin, View):
