@@ -84,6 +84,12 @@ class UpdateUserView(AuthRequiredMixin, EditPermissionRequiredMixin, FormView):
     login_url = reverse_lazy("login_view")
     success_url = reverse_lazy("users_list_view")
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user_id"] = self.request.user.id
+
+        return context
+
     def get_initial(self):
         user_id = self.kwargs.get("pk")
         existing_user = User.objects.get(id=user_id)

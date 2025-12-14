@@ -17,9 +17,9 @@
                     <td>{{ user.first_name|add:" "|add:user.last_name }}</td>
                     <td>{{ user.date_joined|date:"d.m.Y H:i" }}</td>
                     <td class="text-center">
-                        <a href="{% url 'update_view' user.id %}">Изменить</a>
+                        <a href="{% url 'users_update_view' user.id %}">Изменить</a>
                         <br>
-                        <a href="{% url 'delete_view' user.id %}">Удалить</a>
+                        <a href="{% url 'users_delete_view' user.id %}">Удалить</a>
                     </td>
                 </tr>
             {% endfor %}
