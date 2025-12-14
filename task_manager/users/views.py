@@ -122,54 +122,6 @@ class UpdateUserView(AuthRequiredMixin, EditPermissionRequiredMixin, FormView):
         return super().form_valid(form)
 
 
-# class UpdateUserView(AuthRequiredMixin, EditPermissionRequiredMixin, View):
-#     login_url = "users/login/"
-#
-#     def get(self, request, *args, **kwargs):
-#         user_id = kwargs.get("pk")
-#         usr = User.objects.get(id=user_id)
-#         form = RegistrationForm({
-#             "first_name": usr.first_name,
-#             "last_name": usr.last_name,
-#             "username": usr.username,
-#             },
-#         )
-#         return render(
-#             request,
-#             "users/update.html",
-#             context={
-#                 "form": form,
-#             },
-#         )
-#
-#     def post(self, request, *args, **kwargs):
-#         form = RegistrationForm(request.POST)
-#         if not form.is_valid():
-#             return render(
-#                 request,
-#                 "users/update.html",
-#                 context={
-#                     "form": form,
-#                 },
-#                 status=422,
-#             )
-#
-#         user_id = kwargs.get("pk")
-#         usr = User.objects.get(id=user_id)
-#         usr.first_name = form.cleaned_data["first_name"]
-#         usr.last_name = form.cleaned_data["last_name"]
-#         usr.username = form.cleaned_data["username"]
-#         usr.set_password(form.cleaned_data["password1"])
-#         usr.save()
-#
-#         messages.success(
-#             request,
-#             "Пользовательские данные успешно обновлены",
-#             "alert alert-success",
-#         )
-#         return redirect(reverse("start_page"))
-
-
 class DeleteUserView(AuthRequiredMixin, EditPermissionRequiredMixin, View):
     login_url = "users/login/"
 

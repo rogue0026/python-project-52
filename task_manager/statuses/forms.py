@@ -3,7 +3,8 @@ from django import forms
 
 class StatusForm(forms.Form):
     name = forms.CharField(
-        label="Имя:",
+        label_suffix="",
+        label="Имя",
         required=True,
         widget=forms.TextInput(attrs={
             "class": "form-control",

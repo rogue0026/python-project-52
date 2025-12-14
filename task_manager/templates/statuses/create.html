@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
     <main class="form-signin w-50 m-auto">
-        <form method="post" action="">
+        <form method="post" action="{% url 'statuses_create_view' %}">
             {% csrf_token %}
             <h1 class="h3 mb-3 fw-normal">Создать статус</h1>
             {% for field in form %}
