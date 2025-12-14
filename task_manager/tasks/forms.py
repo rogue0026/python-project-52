@@ -7,6 +7,10 @@ from task_manager.labels.models import Label
 from task_manager.statuses.models import Status
 
 
+class ExecutorChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return f"{obj.first_name} {obj.last_name}"
+
 class TaskForm(forms.Form):
     name = forms.CharField(
         label_suffix="",
@@ -40,21 +44,16 @@ class TaskForm(forms.Form):
     )
     status.label_from_instance = lambda obj: f"{obj.name}"
 
-    executor = forms.ModelChoiceField(
+    executor = ExecutorChoiceField(
         label_suffix="",
         label="Исполнитель",
-        queryset=User.objects.all().annotate(
-            full_name=Concat(
-                "first_name",
-                Value(" "),
-                "last_name",
-            )),
+        queryset=User.objects.all(),
         widget=forms.Select(attrs={
             "class": "form-control",
             "id": "id_executor",
         })
     )
-    executor.label_from_instance = lambda obj: f"{obj.full_name}"
+
 
     labels = forms.ModelMultipleChoiceField(
         required=False,

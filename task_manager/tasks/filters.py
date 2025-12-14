@@ -1,11 +1,14 @@
+import django_filters
 from django import forms
 from django.contrib.auth.models import User
-from django.db.models import Value
-from django.db.models.functions import Concat
 from django_filters import BooleanFilter, FilterSet, ModelChoiceFilter
-
+from task_manager.tasks.forms import ExecutorChoiceField
 from task_manager.labels.models import Label
 from task_manager.statuses.models import Status
+
+
+class ExecutorFilter(django_filters.ModelChoiceFilter):
+    field_class = ExecutorChoiceField
 
 
 class TaskFilter(FilterSet):
@@ -19,15 +22,10 @@ class TaskFilter(FilterSet):
         }),
     )
 
-    executor = ModelChoiceFilter(
+    executor = ExecutorFilter(
         label="Исполнитель",
         label_suffix="",
-        queryset=User.objects.all().annotate(
-            full_name=Concat(
-                "first_name",
-                Value(" "),
-                "last_name",
-            )),
+        queryset=User.objects.all(),
         widget=forms.Select(attrs={
             "id": "id_executor",
             "class": "form-control",
@@ -59,3 +57,4 @@ class TaskFilter(FilterSet):
         if value:
             return queryset.filter(author=self.request.user)
         return queryset
+
