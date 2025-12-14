@@ -40,7 +40,7 @@ class TaskFilter(FilterSet):
         field_name="labels",
         queryset=Label.objects.all(),
         widget=forms.Select(attrs={
-            "id": "id_executor",
+            "id": "id_label",
             "class": "form-control",
         }),
     )
