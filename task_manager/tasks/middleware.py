@@ -12,7 +12,7 @@ class DeletePermissionRequiredMixin:
         if task.author.id != user_id:
             messages.error(
                 request,
-                "Задачу может удалить только её автор",
+                "Задачу может удалить только ее автор",
                 "alert alert-danger",
             )
             return redirect(reverse("tasks_list_view"))
