@@ -1,7 +1,6 @@
 from django.contrib import messages
 from django.db import transaction
 from django.urls import reverse_lazy
-from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
 from django.shortcuts import (
     redirect,
@@ -81,142 +80,62 @@ class UpdateTaskView(AuthRequiredMixin, FormView):
     template_name = "tasks/update.html"
     success_url = reverse_lazy("tasks_list_view")
 
-    def get_form_class(self):
-        return TaskForm
-
-    def get_initial(self):
-        task_id = self.kwargs.get("pk")
-        task = Task.objects.get(id=task_id)
-
-        labels_ids = TaskLabel.objects.filter(
-            task_id=task_id).values_list("label_id", flat=True)
-        linked_labels = Label.objects.filter(id__in=labels_ids)
-
-        return {
-            "name": task.name,
-            "description": task.description,
-            "status": task.status,
-            "executor": task.executor,
-            "labels": linked_labels,
-        }
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["task_id"] = self.kwargs.get("pk")
 
         return context
 
+    def get_initial(self):
+        task_id = self.kwargs["pk"]
+        task = Task.objects.get(id=task_id)
+        labels = task.labels.all()
+        return {
+            "name": task.name,
+            "description": task.description,
+            "status": task.status,
+            "executor": task.executor,
+            "labels": labels,
+        }
+
+    def get_form_class(self):
+        return TaskForm
+
     def form_valid(self, form):
-        task_id = int(self.kwargs.get("pk"))
+        task_id = self.kwargs["pk"]
 
         with transaction.atomic():
-            # получаем таску
+            # получаем задачу
             task = Task.objects.get(id=task_id)
 
-            # копируем имя описание статус и исполнителя
+            # обновляем имя, описание, статус и исполнителя
             task.name = form.cleaned_data["name"]
             task.description = form.cleaned_data["description"]
             task.status = form.cleaned_data["status"]
             task.executor = form.cleaned_data["executor"]
 
-            # чистим связи тегов с данной задачей в промежуточной таблице
-            old_tag_links = TaskLabel.objects.filter(task_id=task.id)
-            old_tag_links.delete()
+            # чистим связи меток с данной задачей в промежуточной таблице
+            labels = TaskLabel.objects.filter(task_id=task.id)
+            labels.delete()
 
-            # получаем из формы новые теги
+            # получаем из формы новые метки
             labels = form.cleaned_data["labels"]
 
-            # создаем для таски новые связи с тегами в промежуточной таблице
-            labels_ids = labels.values_list("id", flat=True)
-            new_task_labels = [
-                TaskLabel(task_id=task.id, label_id=label_id,)
-                for label_id in labels_ids
+            # создаем для задачи новые связи с метками в промежуточной таблице
+            new_task_label_links = [
+                TaskLabel(task_id=task.id, label_id=label.id) for label in labels
             ]
-            TaskLabel.objects.bulk_create(new_task_labels)
+            TaskLabel.objects.bulk_create(new_task_label_links)
+
+            # сохраняем задачу в базу
             task.save()
 
             messages.success(
                 self.request,
-            "Задача успешно изменена",
+                "Задача успешно изменена",
                 extra_tags="alert alert-success",
             )
-
             return super().form_valid(form)
-
-
-# class UpdateTaskView(AuthRequiredMixin, View):
-#     def get(self, request, *args, **kwargs):
-#         task_id = int(kwargs.get("pk"))
-#         task = Task.objects.get(id=task_id)
-#
-#         labels_ids = TaskLabel.objects.filter(
-#             task_id=task_id).values_list("label_id", flat=True)
-#
-#         linked_labels = Label.objects.filter(id__in=labels_ids)
-#
-#         form = TaskForm({
-#             "name": task.name,
-#             "description": task.description,
-#             "status": task.status,
-#             "executor": task.executor,
-#             "labels": linked_labels,
-#         })
-#
-#         return render(
-#             request,
-#             "tasks/update.html",
-#             context={
-#                 "form": form,
-#                 "task_id": task_id,
-#             },
-#         )
-#
-#     def post(self, request, *args, **kwargs):
-#         form = TaskForm(request.POST)
-#         if not form.is_valid():
-#             return render(
-#                 request,
-#                 "users/update.html",
-#                 context={
-#                     "form": form,
-#                 },
-#                 status=422,
-#             )
-#
-#         task_id = int(kwargs.get("pk"))
-#         with transaction.atomic():
-#             # получаем таску
-#             task = Task.objects.get(id=task_id)
-#
-#             # копируем имя описание статус и исполнителя
-#             task.name = form.cleaned_data["name"]
-#             task.description = form.cleaned_data["description"]
-#             task.status = form.cleaned_data["status"]
-#             task.executor = form.cleaned_data["executor"]
-#
-#             # удаляем старые теги
-#             old_labels = task.labels_set.all()
-#             print(old_labels.values())
-#             old_labels.delete()
-#
-#             # получаем из формы новые теги
-#             labels = form.cleaned_data["labels"]
-#
-#             # создаем для таски новые связи с тегами
-#             labels_ids = labels.values_list("id", flat=True)
-#             new_task_labels = [
-#                 TaskLabel(task_id=task.id, label_id=label_id,)
-#                 for label_id in labels_ids
-#             ]
-#             TaskLabel.objects.bulk_create(new_task_labels)
-#
-#             messages.success(
-#                 request,
-#                 "Задача успешно изменена",
-#                 extra_tags="alert alert-success",
-#             )
-#
-#         return redirect(reverse("tasks_list_view"))
 
 
 class DeleteTaskView(DeletePermissionRequiredMixin, View):
