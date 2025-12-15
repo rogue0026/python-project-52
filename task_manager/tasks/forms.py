@@ -26,10 +26,11 @@ class TaskForm(forms.Form):
     description = forms.CharField(
         label_suffix="",
         label="Описание",
-        widget=forms.TextInput(attrs={
+        widget=forms.Textarea(attrs={
             "class": "form-control",
             "placeholder": "Описание",
             "id": "id_description",
+            "rows": "5",
         })
     )
 
