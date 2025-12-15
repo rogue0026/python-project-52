@@ -23,7 +23,7 @@ class EditPermissionRequiredMixin:
         if user_id != id:
             messages.error(
                 request,
-                "Недостаточно прав",
+                "У вас нет прав для изменения",
                 "alert alert-danger",
             )
             return redirect(reverse("users_list_view"))
