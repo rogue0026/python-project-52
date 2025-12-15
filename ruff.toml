@@ -5,11 +5,6 @@ exclude = [
     "task_manager/statuses/migrations/*",
     "task_manager/tasks/migrations/*",
     "task_manager/users/migrations/*",
-    "task_manager/labels/urls.py",
-    "task_manager/statuses/urls.py",
-    "task_manager/tasks/urls.py",
-    "task_manager/users/urls.py",
-    "task_manager/urls.py",
     "task_manager/settings.py",
 ]
 
