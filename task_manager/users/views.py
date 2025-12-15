@@ -2,10 +2,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import UpdateView
-from django.views.generic.edit import View
+from django.views.generic.edit import FormView, View
 from django.views.generic.list import ListView
-from django.views.generic.edit import FormView
 
 from task_manager.users.forms import RegistrationForm
 from task_manager.users.middleware import (

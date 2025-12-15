@@ -3,8 +3,9 @@ from django.db.models import ProtectedError
 from django.shortcuts import redirect, render, reverse
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
+from django.views.generic.list import ListView
+
 from task_manager.labels.forms import LabelForm
 from task_manager.labels.models import Label
 from task_manager.users.middleware import (

@@ -1,13 +1,13 @@
 from django.contrib import messages
 from django.db import transaction
-from django.urls import reverse_lazy
-from django.views.generic.edit import FormView
 from django.shortcuts import (
     redirect,
     render,
     reverse,
 )
+from django.urls import reverse_lazy
 from django.views import View
+from django.views.generic.edit import FormView
 
 from task_manager.labels.models import (
     Label,
@@ -123,7 +123,7 @@ class UpdateTaskView(AuthRequiredMixin, FormView):
 
             # создаем для задачи новые связи с метками в промежуточной таблице
             new_task_label_links = [
-                TaskLabel(task_id=task.id, label_id=label.id) for label in labels
+                TaskLabel(task_id=task.id, label_id=label.id) for label in labels  # noqa: E501
             ]
             TaskLabel.objects.bulk_create(new_task_label_links)
 

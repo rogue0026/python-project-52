@@ -1,8 +1,9 @@
 from django.contrib import messages
-from django.views.generic.list import ListView
+from django.db.models import ProtectedError
 from django.shortcuts import redirect, render, reverse
 from django.views import View
-from django.db.models import ProtectedError
+from django.views.generic.list import ListView
+
 from task_manager.statuses.forms import StatusForm
 from task_manager.statuses.models import Status
 from task_manager.users.middleware import AuthRequiredMixin
