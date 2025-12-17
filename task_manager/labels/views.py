@@ -8,7 +8,7 @@ from django.views.generic.list import ListView
 
 from task_manager.labels.forms import LabelForm
 from task_manager.labels.models import Label
-from task_manager.users.middleware import (
+from task_manager.users.mixins import (
     AuthRequiredMixin,
 )
 

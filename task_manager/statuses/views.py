@@ -6,7 +6,7 @@ from django.views.generic.list import ListView
 
 from task_manager.statuses.forms import StatusForm
 from task_manager.statuses.models import Status
-from task_manager.users.middleware import AuthRequiredMixin
+from task_manager.users.mixins import AuthRequiredMixin
 
 
 class StatusesListView(AuthRequiredMixin, ListView):

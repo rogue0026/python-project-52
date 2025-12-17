@@ -1,49 +1,22 @@
 from django.contrib import messages
-from django.contrib.auth.views import LoginView, LogoutView
-from django.shortcuts import render
-from django.views import View
-
-from task_manager.forms import LoginForm
+from django.contrib.auth import views
+from django.views.generic import TemplateView
 
 
-class IndexView(View):
-    def get(self, request, *args, **kwargs):
-        return render(
-            request,
-            "index.html",
-        )
+class IndexView(TemplateView):
+    template_name = "index.html"
 
 
-class Login(LoginView):
-
+class Login(views.LoginView):
     template_name = "login.html"
-    redirect_authenticated_user = False
-    form_class = LoginForm
-
-    def form_invalid(self, form):
-        messages.error(
-            self.request,
-            "Пожалуйста, введите правильные имя пользователя и пароль. Оба поля могут быть чувствительны к регистру.",  # noqa: E501
-            extra_tags="alert alert-danger",
-        )
-        return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):
-        messages.success(
-            self.request,
-            "Вы залогинены",
-            extra_tags="alert alert-success",
-        )
+        messages.success(self.request,"Вы залогинены")
         return super().form_valid(form)
 
 
-class Logout(LogoutView):
-    template_name = "logout.html"
-
+class Logout(views.LogoutView):
     def post(self, request, *args, **kwargs):
-        messages.success(
-            request,
-            "Вы разлогинены",
-            extra_tags="alert alert-success",
-        )
+        messages.success(request, "Вы разлогинены")
         return super().post(request, *args, **kwargs)
+    template_name = "logout.html"

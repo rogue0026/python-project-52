@@ -47,13 +47,7 @@
         </header>
     </div>
     <div class="container">
-        {% if messages %}
-            {% for message in messages %}
-                <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
+        {% bootstrap_messages %}
     </div>
     {% block content %}
     {% endblock %}

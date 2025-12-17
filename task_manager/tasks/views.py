@@ -19,7 +19,7 @@ from task_manager.tasks.models import (
     Task,
     TaskLabel,
 )
-from task_manager.users.middleware import (
+from task_manager.users.mixins import (
     AuthRequiredMixin,
 )
 
