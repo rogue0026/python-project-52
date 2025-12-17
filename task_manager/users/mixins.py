@@ -1,31 +1,25 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.shortcuts import redirect, reverse
+from django.urls import reverse_lazy
 
 
-class AuthRequiredMixin:
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            messages.error(
-                request,
-                "Для выполнения этой операции необходимо авторизоваться",
-                "alert alert-danger",
-            )
-            return redirect(reverse("login_view"))
-
-        return super().dispatch(request, *args, **kwargs)
+class AuthRequiredMixin(LoginRequiredMixin):
+    def handle_no_permission(self):
+        messages.error(
+            self.request,
+            "Для выполнения этой операции необходимо авторизоваться",
+        )
+        return redirect(reverse_lazy("login_view"))
 
 
-class EditPermissionRequiredMixin:
-    def dispatch(self, request, *args, **kwargs):
-        user_id = request.user.id
-        id = kwargs.get("pk")
-        print(id)
-        if user_id != id:
-            messages.error(
-                request,
-                "У вас нет прав для изменения",
-                "alert alert-danger",
-            )
-            return redirect(reverse("users_list_view"))
+class EditPermissionRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.id == int(self.kwargs.get("pk"))
 
-        return super().dispatch(request, *args, **kwargs)
+    def handle_no_permission(self):
+        messages.error(
+            self.request,
+            "У вас нет прав для изменения",
+        )
+        return redirect(reverse_lazy("users_list_view"))
