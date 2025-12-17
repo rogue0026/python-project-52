@@ -1,15 +1,9 @@
-import django_filters
 from django import forms
 from django.contrib.auth.models import User
 from django_filters import BooleanFilter, FilterSet, ModelChoiceFilter
 
 from task_manager.labels.models import Label
 from task_manager.statuses.models import Status
-from task_manager.tasks.forms import ExecutorChoiceField
-
-
-class ExecutorFilter(django_filters.ModelChoiceFilter):
-    field_class = ExecutorChoiceField
 
 
 class TaskFilter(FilterSet):
@@ -23,7 +17,7 @@ class TaskFilter(FilterSet):
         }),
     )
 
-    executor = ExecutorFilter(
+    executor = ModelChoiceFilter(
         label="Исполнитель",
         label_suffix="",
         queryset=User.objects.all(),
