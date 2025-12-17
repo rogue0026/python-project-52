@@ -4,9 +4,9 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,
-    UpdateView,
     DeleteView,
     ListView,
+    UpdateView,
 )
 
 from task_manager.labels.forms import LabelForm
@@ -47,7 +47,7 @@ class UpdateLabelView(AuthRequiredMixin, UpdateView):
         return context
 
     def form_valid(self, form):
-        messages.success(self.request,"Метка успешно изменена")
+        messages.success(self.request, "Метка успешно изменена")
         return super().form_valid(form)
 
 
@@ -68,5 +68,5 @@ class DeleteLabelView(AuthRequiredMixin, DeleteView):
             self.object.delete()
             messages.success(self.request, "Метка успешно удалена")
         except ProtectedError:
-            messages.error(self.request,"Невозможно удалить метку, потому что она используется")
+            messages.error(self.request, "Невозможно удалить метку, потому что она используется")
         return HttpResponseRedirect(success_url)

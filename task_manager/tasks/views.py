@@ -1,16 +1,9 @@
 from django.contrib import messages
 from django.db import transaction
 from django.http import HttpResponseRedirect
-from django.shortcuts import (
-    render,
-)
 from django.urls import reverse_lazy
-from django.views import View
-from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView, DetailView
+from django.views.generic import CreateView, DeleteView, DetailView, TemplateView, UpdateView, ListView
 
-from task_manager.labels.models import (
-    Label,
-)
 from task_manager.tasks.filters import TaskFilter
 from task_manager.tasks.forms import TaskForm
 from task_manager.tasks.mixins import DeletePermissionRequiredMixin
@@ -23,20 +16,37 @@ from task_manager.users.mixins import (
 )
 
 
-class TasksListView(AuthRequiredMixin, TemplateView):
+class TasksListView(AuthRequiredMixin, ListView):
     template_name = "tasks/index.html"
+    context_object_name = "tasks"
+    model = Task
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        all_tasks = Task.objects.all()
-        task_filter = TaskFilter(
+        filter = TaskFilter(
             self.request.GET,
-            queryset=all_tasks,
+            queryset=Task.objects.all(),
             request=self.request,
         )
-        context["task_filter"] = task_filter
-        context["tasks"] = task_filter.qs
+        context["filter_form"] = filter.form
+        context["tasks"] = filter.qs
         return context
+
+
+# class TasksListView(AuthRequiredMixin, TemplateView):
+#     template_name = "tasks/index.html"
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         all_tasks = Task.objects.all()
+#         task_filter = TaskFilter(
+#             self.request.GET,
+#             queryset=all_tasks,
+#             request=self.request,
+#         )
+#         context["task_filter"] = task_filter
+#         context["tasks"] = task_filter.qs
+#         return context
 
 
 class CreateTaskView(AuthRequiredMixin, CreateView):

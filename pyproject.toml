@@ -19,3 +19,21 @@ dependencies = [
 dev = [
     "ruff>=0.14.7",
 ]
+
+[tool.ruff]
+line-length = 100
+
+exclude = [
+    "task_manager/labels/migrations/*",
+    "task_manager/statuses/migrations/*",
+    "task_manager/tasks/migrations/*",
+    "task_manager/users/migrations/*",
+    "task_manager/settings.py",
+]
+
+[lint.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[lint]
+preview = true
+select = ["E", "F", "I", "C90"]

@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import DeleteView, UpdateView
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
+
 from task_manager.statuses.forms import StatusForm
 from task_manager.statuses.models import Status
 from task_manager.users.mixins import AuthRequiredMixin
