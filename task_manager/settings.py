@@ -7,10 +7,20 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'task_manager/templates')
 SECRET_KEY = os.getenv('SECRET_KEY')
-
 DEBUG = bool(os.getenv("DEBUG"))
+LOGIN_URL = 'login_view'
+LOGIN_REDIRECT_URL = 'start_page'
+LOGOUT_REDIRECT_URL = 'start_page'
+ROOT_URLCONF = 'task_manager.urls'
+WSGI_APPLICATION = 'task_manager.wsgi.application'
+LANGUAGE_CODE = 'ru-ru'
+TIME_ZONE = 'Europe/Moscow'
+USE_I18N = True
+USE_TZ = True
+STATIC_URL = 'static/'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ALLOWED_HOSTS = [
     'task-manager-ekb1.onrender.com',
@@ -26,14 +36,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'django_bootstrap5',
     'django_filters',
+
     'task_manager',
     'task_manager.users',
     'task_manager.statuses',
     'task_manager.tasks',
     'task_manager.labels',
-
 ]
 
 MIDDLEWARE = [
@@ -46,14 +57,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
 ]
-
-ROOT_URLCONF = 'task_manager.urls'
-
-TEMPLATES_DIR = os.path.join(BASE_DIR, 'task_manager/templates')
-
-LOGIN_URL = 'login_view'
-LOGIN_REDIRECT_URL = 'start_page'
-LOGOUT_REDIRECT_URL = 'start_page'
 
 ROLLBAR = {
     'access_token': os.getenv("ROLLBAR_TOKEN"),
@@ -80,13 +83,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'task_manager.wsgi.application'
-
-
 DATABASES = {
     'default': dj_database_url.parse(os.getenv("DATABASE_URL"))
 }
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -96,15 +95,3 @@ AUTH_PASSWORD_VALIDATORS = [
         }
     },
 ]
-
-LANGUAGE_CODE = 'ru-ru'
-
-TIME_ZONE = 'Europe/Moscow'
-
-USE_I18N = True
-
-USE_TZ = True
-
-STATIC_URL = 'static/'
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

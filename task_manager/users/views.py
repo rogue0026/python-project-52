@@ -26,7 +26,11 @@ class UserRegistrationView(CreateView):
         return super().form_valid(form)
 
 
-class UpdateUserView(AuthRequiredMixin, EditPermissionRequiredMixin, UpdateView):
+class UpdateUserView(
+    AuthRequiredMixin,
+    EditPermissionRequiredMixin,
+    UpdateView):
+
     template_name = "users/update.html"
     success_url = reverse_lazy("users_list_view")
     model = User
@@ -42,7 +46,11 @@ class UpdateUserView(AuthRequiredMixin, EditPermissionRequiredMixin, UpdateView)
         return super().form_valid(form)
 
 
-class DeleteUserView(AuthRequiredMixin, EditPermissionRequiredMixin, DeleteView):
+class DeleteUserView(
+    AuthRequiredMixin,
+    EditPermissionRequiredMixin,
+    DeleteView):
+
     login_url = "users/login/"
     success_url = reverse_lazy("users_list_view")
     template_name = "users/delete.html"

@@ -1,6 +1,10 @@
 from django import forms
 from django.contrib.auth.models import User
-from django_filters import BooleanFilter, FilterSet, ModelChoiceFilter
+from django_filters import (
+    BooleanFilter,
+    FilterSet,
+    ModelChoiceFilter
+)
 
 from task_manager.labels.models import Label
 from task_manager.statuses.models import Status
