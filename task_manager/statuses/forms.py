@@ -1,15 +1,20 @@
 from django import forms
+from task_manager.statuses.models import Status
 
 
-class StatusForm(forms.Form):
-    name = forms.CharField(
-        label_suffix="",
-        label="Имя",
-        required=True,
-        widget=forms.TextInput(attrs={
-            "class": "form-control",
-            "placeholder": "Имя",
-            "id": "id_name",
-        },
-        ),
-    )
+class StatusForm(forms.ModelForm):
+    class Meta:
+        model = Status
+        fields = ["name"]
+        widgets = {
+            "name": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Имя",
+                    "id": "id_name",
+                },
+            )
+        }
+        labels = {
+            "name": "Имя"
+        }

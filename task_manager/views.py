@@ -11,7 +11,7 @@ class Login(views.LoginView):
     template_name = "login.html"
 
     def form_valid(self, form):
-        messages.success(self.request,"Вы залогинены")
+        messages.success(self.request, "Вы залогинены")
         return super().form_valid(form)
 
 

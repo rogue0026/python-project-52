@@ -1,9 +1,10 @@
 from django.contrib import messages
 from django.db.models import ProtectedError
-from django.shortcuts import redirect, render, reverse
-from django.views import View
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
+from django.views.generic import DeleteView, UpdateView
+from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
-
 from task_manager.statuses.forms import StatusForm
 from task_manager.statuses.models import Status
 from task_manager.users.mixins import AuthRequiredMixin
@@ -14,109 +15,45 @@ class StatusesListView(AuthRequiredMixin, ListView):
     model = Status
 
 
-class CreateStatusView(View):
-    def get(self, request, *args, **kwargs):
-        form = StatusForm()
-        return render(
-            request,
-            "statuses/create.html",
-            context={
-                "form": form,
-            },
-        )
+class CreateStatusView(CreateView):
+    template_name = "statuses/create.html"
+    success_url = reverse_lazy("statuses_list_view")
+    model = Status
+    form_class = StatusForm
 
-    def post(self, request, *args, **kwargs):
-        f = StatusForm(request.POST)
-        if not f.is_valid():
-            return render(
-                request,
-                "statuses/create.html",
-                context={
-                    "form": f,
-                },
-                status=422,
-            )
-
-        s = Status.objects.create(name=f.cleaned_data["name"])
-        s.save()
-        messages.success(
-            request,
-            "Статус успешно создан",
-            extra_tags="alert alert-success",
-        )
-        return redirect(reverse("statuses_list_view"))
+    def form_valid(self, form):
+        messages.success(self.request, "Статус успешно создан")
+        return super().form_valid(form)
 
 
-class UpdateStatusView(View):
-    def get(self, request, *args, **kwargs):
-        status_id = int(kwargs.get("pk"))
-        status = Status.objects.get(id=status_id)
-        form = StatusForm(
-            {
-                "name": status.name,
-            },
-        )
-        return render(
-            request,
-            "statuses/update.html",
-            context={
-                "form": form,
-                "status_id": status_id,
-            }
-        )
+class UpdateStatusView(UpdateView):
+    template_name = "statuses/update.html"
+    success_url = reverse_lazy("statuses_list_view")
+    model = Status
+    form_class = StatusForm
 
-    def post(self, request, *args, **kwargs):
-        status_id = int(kwargs.get("pk"))
-        status = Status.objects.get(id=status_id)
-        form = StatusForm(request.POST)
-        if not form.is_valid():
-            render(
-                request,
-                "statuses/update.html",
-                context={
-                    "form": form,
-                    "status_id": status_id,
-                }
-            )
-        status.name = form.cleaned_data["name"]
-        status.save()
-        messages.success(
-            request,
-            "Статус успешно изменен",
-            extra_tags="alert alert-success",
-        )
-        return redirect(reverse("statuses_list_view"))
+    def form_valid(self, form):
+        messages.success(self.request, "Статус успешно изменен")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["status_id"] = self.kwargs.get("pk")
+        return context
 
 
-class DeleteStatusView(View):
-    def get(self, request, *args, **kwargs):
-        status_id = int(kwargs.get("pk"))
-        status = Status.objects.get(id=status_id)
-        return render(
-            request,
-            "statuses/delete.html",
-            context={
-                "status_name": status.name,
-            },
-        )
+class DeleteStatusView(DeleteView):
+    template_name = "statuses/delete.html"
+    success_url = reverse_lazy("statuses_list_view")
+    model = Status
 
-    def post(self, request, *args, **kwargs):
-        status_id = int(kwargs.get("pk"))
+    def form_valid(self, form):
+        success_url = self.get_success_url()
 
         try:
-            status = Status.objects.get(id=status_id)
-            status.delete()
+            self.object.delete()
+            messages.success(self.request, "Статус успешно удален")
         except ProtectedError:
-            messages.error(
-                request,
-                "Невозможно удалить статус, потому что он используется",
-                extra_tags="alert alert-danger",
-            )
-            return redirect(reverse("statuses_list_view"))
+            messages.error(self.request, "Невозможно удалить статус, потому что он используется")
 
-        messages.success(
-            request,
-            "Статус успешно удален",
-            extra_tags="alert alert-success",
-        )
-        return redirect(reverse("statuses_list_view"))
+        return HttpResponseRedirect(success_url)

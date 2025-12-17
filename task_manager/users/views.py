@@ -1,13 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
+
 from task_manager.users.forms import RegistrationForm
 from task_manager.users.mixins import (
     AuthRequiredMixin,
     EditPermissionRequiredMixin,
 )
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 
 class UserListView(ListView):
@@ -21,7 +22,7 @@ class UserRegistrationView(CreateView):
     form_class = RegistrationForm
 
     def form_valid(self, form):
-        messages.success(self.request,"Пользователь успешно зарегистрирован")
+        messages.success(self.request, "Пользователь успешно зарегистрирован")
         return super().form_valid(form)
 
 
