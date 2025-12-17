@@ -30,3 +30,7 @@ class TaskForm(forms.ModelForm):
             "executor": "Исполнитель",
             "labels": "Метки"
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["labels"].required = False
