@@ -33,22 +33,6 @@ class TasksListView(AuthRequiredMixin, ListView):
         return context
 
 
-# class TasksListView(AuthRequiredMixin, TemplateView):
-#     template_name = "tasks/index.html"
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         all_tasks = Task.objects.all()
-#         task_filter = TaskFilter(
-#             self.request.GET,
-#             queryset=all_tasks,
-#             request=self.request,
-#         )
-#         context["task_filter"] = task_filter
-#         context["tasks"] = task_filter.qs
-#         return context
-
-
 class CreateTaskView(AuthRequiredMixin, CreateView):
     template_name = "tasks/create.html"
     success_url = reverse_lazy("tasks_list_view")
