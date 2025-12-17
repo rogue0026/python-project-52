@@ -55,6 +55,9 @@ class DeleteStatusView(DeleteView):
             self.object.delete()
             messages.success(self.request, "Статус успешно удален")
         except ProtectedError:
-            messages.error(self.request, "Невозможно удалить статус, потому что он используется")
+            messages.error(
+                self.request,
+                "Невозможно удалить статус, потому что он используется",
+            )
 
         return HttpResponseRedirect(success_url)

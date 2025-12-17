@@ -2,7 +2,13 @@ from django.contrib import messages
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, DetailView, TemplateView, UpdateView, ListView
+from django.views.generic import (
+    ListView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+    DetailView,
+)
 
 from task_manager.tasks.filters import TaskFilter
 from task_manager.tasks.forms import TaskForm

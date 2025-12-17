@@ -68,5 +68,8 @@ class DeleteLabelView(AuthRequiredMixin, DeleteView):
             self.object.delete()
             messages.success(self.request, "Метка успешно удалена")
         except ProtectedError:
-            messages.error(self.request, "Невозможно удалить метку, потому что она используется")
+            messages.error(
+                self.request,
+                "Невозможно удалить метку, потому что она используется",
+            )
         return HttpResponseRedirect(success_url)
