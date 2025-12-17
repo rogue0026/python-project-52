@@ -1,16 +1,17 @@
 from django.contrib import messages
 from django.db.models import ProtectedError
-from django.shortcuts import redirect, render, reverse
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views import View
-from django.views.generic.edit import FormView
-from django.views.generic.list import ListView
+from django.views.generic import (
+    CreateView,
+    UpdateView,
+    DeleteView,
+    ListView,
+)
 
 from task_manager.labels.forms import LabelForm
 from task_manager.labels.models import Label
-from task_manager.users.mixins import (
-    AuthRequiredMixin,
-)
+from task_manager.users.mixins import AuthRequiredMixin
 
 
 class LabelListView(AuthRequiredMixin, ListView):
@@ -18,17 +19,13 @@ class LabelListView(AuthRequiredMixin, ListView):
     template_name = "labels/index.html"
 
 
-class CreateLabelView(AuthRequiredMixin, FormView):
+class CreateLabelView(AuthRequiredMixin, CreateView):
     template_name = "labels/create.html"
     success_url = reverse_lazy('labels_list_view')
-
-    def get_form_class(self):
-        return LabelForm
+    model = Label
+    form_class = LabelForm
 
     def form_valid(self, form):
-        label_name = form.cleaned_data["name"]
-        label = Label.objects.create(name=label_name)
-        label.save()
         messages.success(
             self.request,
             "Метка успешно создана",
@@ -37,74 +34,39 @@ class CreateLabelView(AuthRequiredMixin, FormView):
         return super().form_valid(form)
 
 
-class UpdateLabelView(AuthRequiredMixin, FormView):
-    success_url = reverse_lazy("labels_list_view")
+class UpdateLabelView(AuthRequiredMixin, UpdateView):
     template_name = "labels/update.html"
-
-    def get_form_class(self):
-        return LabelForm
-
-    def get_initial(self):
-        label_id = int(self.kwargs.get("pk"))
-        existing_label = Label.objects.get(id=label_id)
-
-        return {
-            "name": existing_label.name
-        }
+    success_url = reverse_lazy("labels_list_view")
+    model = Label
+    form_class = LabelForm
 
     def get_context_data(self, **kwargs):
         label_id = self.kwargs.get("pk")
-
         context = super().get_context_data(**kwargs)
         context["label_id"] = label_id
-
         return context
 
     def form_valid(self, form):
-        label_id = self.kwargs.get("pk")
-
-        existing_label = Label.objects.get(id=label_id)
-        existing_label.name = form.cleaned_data["name"]
-        existing_label.save()
-
-        messages.success(
-            self.request,
-            "Метка успешно изменена",
-            extra_tags="alert alert-success",
-        )
-
+        messages.success(self.request,"Метка успешно изменена")
         return super().form_valid(form)
 
 
-class DeleteLabelView(AuthRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        label_id = int(kwargs.get("pk"))
-        label = Label.objects.get(id=label_id)
-        return render(
-            request,
-            "labels/delete.html",
-            context={
-                "label_name": label.name,
-                "label_id": label_id,
-            },
-        )
+class DeleteLabelView(AuthRequiredMixin, DeleteView):
+    template_name = "labels/delete.html"
+    success_url = reverse_lazy("labels_list_view")
+    model = Label
 
-    def post(self, request, *args, **kwargs):
-        label_id = int(kwargs.get("pk"))
-        label = Label.objects.get(id=label_id)
+    def get_context_data(self, **kwargs):
+        label_id = self.kwargs.get("pk")
+        context = super().get_context_data(**kwargs)
+        context["label_id"] = label_id
+        return context
+
+    def form_valid(self, form):
+        success_url = self.get_success_url()
         try:
-            label.delete()
+            self.object.delete()
+            messages.success(self.request, "Метка успешно удалена")
         except ProtectedError:
-            messages.error(
-                request,
-                "Невозможно удалить метку, потому что она используется",
-                extra_tags="alert alert-danger",
-            )
-            return redirect(reverse("labels_list_view"))
-
-        messages.success(
-            request,
-            "Метка успешно удалена",
-            extra_tags="alert alert-success",
-        )
-        return redirect(reverse("labels_list_view"))
+            messages.error(self.request,"Невозможно удалить метку, потому что она используется")
+        return HttpResponseRedirect(success_url)
