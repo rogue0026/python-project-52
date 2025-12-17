@@ -19,6 +19,7 @@ class TaskFilter(FilterSet):
 
     label = ModelChoiceFilter(
         label="Метка",
+        field_name="labels",
         queryset=Label.objects.all(),
     )
 
