@@ -1,8 +1,11 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.edit import (
+    CreateView,
+    DeleteView,
+    UpdateView
+)
 from django.views.generic.list import ListView
 from task_manager.users.forms import RegistrationForm
 from task_manager.users.mixins import (
