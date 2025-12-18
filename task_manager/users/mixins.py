@@ -1,6 +1,8 @@
+from http.cookiejar import cut_port_re
+
 from django.contrib import messages
-from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
-from django.shortcuts import redirect, reverse
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 
 
@@ -13,13 +15,14 @@ class AuthRequiredMixin(LoginRequiredMixin):
         return redirect(reverse_lazy("login_view"))
 
 
-class EditPermissionRequiredMixin(UserPassesTestMixin):
-    def test_func(self):
-        return self.request.user.id == int(self.kwargs.get("pk"))
-
-    def handle_no_permission(self):
-        messages.error(
-            self.request,
-            "У вас нет прав для изменения",
-        )
-        return redirect(reverse_lazy("users_list_view"))
+class EditPermissionRequiredMixin:
+    def dispatch(self, request, *args, **kwargs):
+        user_id = request.user.id
+        id = int(kwargs["pk"])
+        if user_id != id:
+            messages.error(
+                request,
+                "У вас нет прав для изменения",
+            )
+            return redirect(reverse_lazy("users_list_view"))
+        return super().dispatch(request, *args, **kwargs)
