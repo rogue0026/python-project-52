@@ -7,7 +7,7 @@ from django.views.generic.edit import (
     UpdateView
 )
 from django.views.generic.list import ListView
-from task_manager.users.forms import RegistrationForm
+from task_manager.users.forms import RegistrationForm, UserUpdateForm
 from task_manager.users.mixins import (
     AuthRequiredMixin,
     EditPermissionRequiredMixin,
@@ -37,7 +37,7 @@ class UpdateUserView(
     template_name = "users/update.html"
     success_url = reverse_lazy("users_list_view")
     model = User
-    form_class = RegistrationForm
+    form_class = UserUpdateForm
 
     def form_valid(self, form):
         messages.success(self.request, "Пользователь успешно изменен")
