@@ -1,19 +1,16 @@
 from django.contrib import messages
 from django.contrib.auth import views
 from django.views.generic import TemplateView
+from django.contrib.messages.views import SuccessMessageMixin
 
 
 class IndexView(TemplateView):
     template_name = "index.html"
 
 
-class Login(views.LoginView):
+class Login(SuccessMessageMixin, views.LoginView):
     template_name = "login.html"
-
-    def form_valid(self, form):
-        messages.success(self.request, "Вы залогинены")
-        return super().form_valid(form)
-
+    success_message = "Вы залогинены"
 
 class Logout(views.LogoutView):
     def post(self, request, *args, **kwargs):

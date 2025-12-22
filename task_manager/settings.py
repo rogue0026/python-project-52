@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'task_manager/templates')
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = bool(os.getenv("DEBUG"))

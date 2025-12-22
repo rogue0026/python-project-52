@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 
@@ -13,14 +13,34 @@ class AuthRequiredMixin(LoginRequiredMixin):
         return redirect(reverse_lazy("login_view"))
 
 
-class EditPermissionRequiredMixin:
+class EditPermissionRequiredMixin(UserPassesTestMixin):
+
     def dispatch(self, request, *args, **kwargs):
-        user_id = request.user.id
-        id = int(kwargs["pk"])
-        if user_id != id:
+        user_test_result = self.get_test_func()()
+        if not user_test_result:
             messages.error(
-                request,
-                "У вас нет прав для изменения",
+                self.request,
+                "Недостаточно прав",
             )
             return redirect(reverse_lazy("users_list_view"))
         return super().dispatch(request, *args, **kwargs)
+
+    def test_func(self):
+        current_user_id = self.request.user.id
+        editable_user = self.kwargs.get("pk")
+        return current_user_id == editable_user
+
+    # def handle_no_permission(self):
+    #     messages.error(
+    #         self.request,
+    #         "У вас нет прав для изменения",
+    #     )
+    #     return redirect(reverse_lazy("users_list_view"))
+
+    # def handle_no_permission(self):
+    #     messages.error(
+    #         self.request,
+    #     "У вас нет прав для изменения",
+    #     )
+    #     return super().handle_no_permission()
+
