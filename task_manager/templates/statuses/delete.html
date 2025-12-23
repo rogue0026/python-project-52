@@ -5,7 +5,7 @@
         <form action="" method="post">
             {% csrf_token %}
             <h1 class="h3 mb-3 fw-normal">Удаление статуса</h1>
-            <p>Вы действительно хотите удалить {{ status_name }}?</p>
+            <p>Вы действительно хотите удалить {{ status.name }}?</p>
             <button class="btn btn-danger w-100" type="submit">Да, удалить</button>
         </form>
     </main>

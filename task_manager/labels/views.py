@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import ProtectedError
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -19,48 +20,34 @@ class LabelListView(AuthRequiredMixin, ListView):
     template_name = "labels/index.html"
 
 
-class CreateLabelView(AuthRequiredMixin, CreateView):
+class CreateLabelView(
+    AuthRequiredMixin,
+    SuccessMessageMixin,
+    CreateView,
+):
     template_name = "labels/create.html"
     success_url = reverse_lazy('labels_list_view')
     model = Label
     form_class = LabelForm
-
-    def form_valid(self, form):
-        messages.success(
-            self.request,
-            "Метка успешно создана",
-            extra_tags="alert alert-success",
-        )
-        return super().form_valid(form)
+    success_message = "Метка успешно создана"
 
 
-class UpdateLabelView(AuthRequiredMixin, UpdateView):
+class UpdateLabelView(
+    AuthRequiredMixin,
+    SuccessMessageMixin,
+    UpdateView):
     template_name = "labels/update.html"
     success_url = reverse_lazy("labels_list_view")
     model = Label
     form_class = LabelForm
-
-    def get_context_data(self, **kwargs):
-        label_id = self.kwargs.get("pk")
-        context = super().get_context_data(**kwargs)
-        context["label_id"] = label_id
-        return context
-
-    def form_valid(self, form):
-        messages.success(self.request, "Метка успешно изменена")
-        return super().form_valid(form)
+    success_message = "Метка успешно создана"
 
 
 class DeleteLabelView(AuthRequiredMixin, DeleteView):
     template_name = "labels/delete.html"
     success_url = reverse_lazy("labels_list_view")
     model = Label
-
-    def get_context_data(self, **kwargs):
-        label_id = self.kwargs.get("pk")
-        context = super().get_context_data(**kwargs)
-        context["label_id"] = label_id
-        return context
+    context_object_name = "label"
 
     def form_valid(self, form):
         success_url = self.get_success_url()

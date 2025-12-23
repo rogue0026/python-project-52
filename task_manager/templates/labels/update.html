@@ -2,7 +2,7 @@
 {% block content %}
 {% load django_bootstrap5 %}
 <main class="form-signin w-50 m-auto">
-        <form method="post" action="{% url 'labels_update_view' label_id %}">
+        <form method="post" action="{% url 'labels_update_view' view.kwargs.pk %}">
             {% csrf_token %}
             <h1 class="h3 mb-3 fw-normal">Изменение метки</h1>
             {% bootstrap_form form %}

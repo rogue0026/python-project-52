@@ -2,7 +2,7 @@
 {% load django_bootstrap5 %}
 {% block content %}
 <main class="form-signin w-50 m-auto">
-        <form method="post" action="{% url 'tasks_update_view' task_id %}">
+        <form method="post" action="{% url 'tasks_update_view' task.id %}">
             {% csrf_token %}
             <h1 class="h3 mb-3 fw-normal">Изменение задачи</h1>
             {% bootstrap_form form %}
