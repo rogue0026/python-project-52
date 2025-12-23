@@ -43,20 +43,21 @@ class UpdateLabelView(
     success_message = "Метка успешно изменена"
 
 
-class DeleteLabelView(AuthRequiredMixin, DeleteView):
+class DeleteLabelView(AuthRequiredMixin,
+                      SuccessMessageMixin,
+                      DeleteView):
     template_name = "labels/delete.html"
     success_url = reverse_lazy("labels_list_view")
     model = Label
     context_object_name = "label"
+    success_message = "Метка успешно удалена"
 
     def form_valid(self, form):
-        success_url = self.get_success_url()
         try:
-            self.object.delete()
-            messages.success(self.request, "Метка успешно удалена")
+            super().form_valid(form)
         except ProtectedError:
             messages.error(
                 self.request,
                 "Невозможно удалить метку, потому что она используется",
             )
-        return HttpResponseRedirect(success_url)
+        return HttpResponseRedirect(self.get_success_url())
