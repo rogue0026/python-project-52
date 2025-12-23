@@ -2,7 +2,7 @@
 <main class="form-signin m-auto mb-5">
     <form method="get" action="{% url 'tasks_list_view' %}">
         {% csrf_token %}
-        {% bootstrap_form filter_form %}
+        {% bootstrap_form filter.form %}
         {% bootstrap_button button_type="submit" content="Показать" %}
     </form>
 </main>

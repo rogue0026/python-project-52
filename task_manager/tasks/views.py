@@ -1,42 +1,25 @@
-from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
-from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import (
-    ListView,
     CreateView,
     UpdateView,
     DeleteView,
     DetailView,
 )
+from django_filters.views import FilterView
 from task_manager.tasks.filters import TaskFilter
 from task_manager.tasks.forms import TaskForm
 from task_manager.tasks.mixins import DeletePermissionRequiredMixin
-from task_manager.tasks.models import (
-    Task,
-    TaskLabel,
-)
-from task_manager.users.mixins import (
-    AuthRequiredMixin,
-)
+from task_manager.tasks.models import Task
+from task_manager.users.mixins import AuthRequiredMixin
 
 
-class TasksListView(AuthRequiredMixin, ListView):
+class TasksListView(AuthRequiredMixin, FilterView):
     template_name = "tasks/index.html"
-    context_object_name = "tasks"
     model = Task
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        filter = TaskFilter(
-            self.request.GET,
-            queryset=Task.objects.all(),
-            request=self.request,
-        )
-        context["filter_form"] = filter.form
-        context["tasks"] = filter.qs
-        return context
+    filterset_class = TaskFilter
+    context_object_name = "tasks"
 
 
 class CreateTaskView(AuthRequiredMixin,
@@ -50,10 +33,8 @@ class CreateTaskView(AuthRequiredMixin,
 
     def form_valid(self, form):
         with transaction.atomic():
-            self.object = form.save(commit=False)
-            self.object.author = self.request.user
-            self.object.save()
-        return super().form_valid(form)
+            form.instance.author = self.request.user
+            return super().form_valid(form)
 
 
 class UpdateTaskView(AuthRequiredMixin,
@@ -66,53 +47,19 @@ class UpdateTaskView(AuthRequiredMixin,
     context_object_name = "task"
     success_message = "Задача успешно изменена"
 
-    def form_valid(self, form):
-        task_id = self.kwargs["pk"]
-
-        with transaction.atomic():
-            # получаем задачу
-            task = Task.objects.get(id=task_id)
-
-            # обновляем имя, описание, статус и исполнителя
-            task.name = form.cleaned_data["name"]
-            task.description = form.cleaned_data["description"]
-            task.status = form.cleaned_data["status"]
-            task.executor = form.cleaned_data["executor"]
-
-            # чистим связи меток с данной задачей в промежуточной таблице
-            labels = TaskLabel.objects.filter(task_id=task.id)
-            labels.delete()
-
-            # получаем из формы новые метки
-            labels = form.cleaned_data["labels"]
-
-            # создаем для задачи новые связи с метками в промежуточной таблице
-            new_task_label_links = [
-                TaskLabel(task_id=task.id, label_id=label.id) for label in labels  # noqa: E501
-            ]
-            TaskLabel.objects.bulk_create(new_task_label_links)
-
-            # сохраняем задачу в базу
-            task.save()
-            return super().form_valid(form)
-
 
 class DeleteTaskView(DeletePermissionRequiredMixin,
+                     SuccessMessageMixin,
                      DeleteView):
     template_name = "tasks/delete.html"
     success_url = reverse_lazy("tasks_list_view")
     model = Task
     context_object_name = "task"
+    success_message = "Задача успешно удалена"
 
     def form_valid(self, form):
-        success_url = self.get_success_url()
         with transaction.atomic():
-            messages.success(
-                self.request,
-                "Задача успешно удалена",
-            )
-            self.object.delete()
-        return HttpResponseRedirect(success_url)
+            return super().form_valid(form)
 
 
 class DetailsTaskView(DetailView):

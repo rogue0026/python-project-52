@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container w-75">
         <a class="btn btn-primary mb-3" href="{% url 'tasks_create_view' %}">Создать задачу</a>
-        {% include "./filter_panel.html" %}
+        {% include "./task_filter.html" %}
         <table class="table table-hover table-bordered">
         <thead>
             <th>ID</th>
