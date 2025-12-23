@@ -12,6 +12,7 @@ class Login(SuccessMessageMixin, views.LoginView):
     template_name = "login.html"
     success_message = "Вы залогинены"
 
+
 class Logout(views.LogoutView):
     def post(self, request, *args, **kwargs):
         messages.success(request, "Вы разлогинены")

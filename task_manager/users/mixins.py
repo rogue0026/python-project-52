@@ -29,18 +29,3 @@ class EditPermissionRequiredMixin(UserPassesTestMixin):
         current_user_id = self.request.user.id
         editable_user = self.kwargs.get("pk")
         return current_user_id == editable_user
-
-    # def handle_no_permission(self):
-    #     messages.error(
-    #         self.request,
-    #         "У вас нет прав для изменения",
-    #     )
-    #     return redirect(reverse_lazy("users_list_view"))
-
-    # def handle_no_permission(self):
-    #     messages.error(
-    #         self.request,
-    #     "У вас нет прав для изменения",
-    #     )
-    #     return super().handle_no_permission()
-
