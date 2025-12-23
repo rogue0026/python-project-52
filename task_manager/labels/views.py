@@ -40,7 +40,7 @@ class UpdateLabelView(
     success_url = reverse_lazy("labels_list_view")
     model = Label
     form_class = LabelForm
-    success_message = "Метка успешно создана"
+    success_message = "Метка успешно изменена"
 
 
 class DeleteLabelView(AuthRequiredMixin, DeleteView):
