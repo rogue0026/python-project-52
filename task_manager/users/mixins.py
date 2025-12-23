@@ -20,7 +20,7 @@ class EditPermissionRequiredMixin(UserPassesTestMixin):
         if not user_test_result:
             messages.error(
                 self.request,
-                "Недостаточно прав",
+                "У вас нет прав для изменения",
             )
             return redirect(reverse_lazy("users_list_view"))
         return super().dispatch(request, *args, **kwargs)
