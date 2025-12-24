@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'task_manager/templates')
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = bool(os.getenv("DEBUG"))
@@ -61,7 +60,7 @@ MIDDLEWARE = [
 
 ROLLBAR = {
     'access_token': os.getenv("ROLLBAR_TOKEN"),
-    'environment': 'development' if os.getenv('DEBUG') == "on" else 'production',
+    'environment': 'development' if os.getenv('DEBUG') == "1" else 'production',
     'code_version': '1.0',
     'branch': 'main',
     'root': BASE_DIR,

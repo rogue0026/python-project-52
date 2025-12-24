@@ -37,3 +37,7 @@ lint:
 .PHONY: install
 install:
 	uv sync
+
+.PHONY: test
+test:
+	uv run manage.py test
