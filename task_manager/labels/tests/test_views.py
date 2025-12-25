@@ -19,6 +19,16 @@ class BaseLabelTest(TestCase):
     def setUp(self):
         for i in range(1, 4):
             Label.objects.create(name=f"label_{i}")
+
+        task = Task.objects.create(
+            name="test_task",
+            description="test_description",
+            status=Status.objects.first(),
+            author=User.objects.get(username="test"),
+            executor=User.objects.get(username="test"),
+        )
+        task.labels.set(Label.objects.all())
+
         self.client.login(username="test", password="12345")
 
 
@@ -122,7 +132,7 @@ class DeleteLabelViewTest(BaseLabelTest):
         self.assertContains(response, label.name)
 
     def test_label_delete(self):
-        label = Label.objects.first()
+        label = Label.objects.create(name="label_for_deletion")
         response = self.client.post(
             reverse("labels_delete_view", kwargs={"pk": label.id}),
             follow=True,
@@ -132,14 +142,6 @@ class DeleteLabelViewTest(BaseLabelTest):
         self.assertFalse(Label.objects.filter(name=label.name).exists())
 
     def test_label_delete_constraint(self):
-        task = Task.objects.create(
-            name="test_task",
-            description="test_description",
-            status=Status.objects.first(),
-            author=User.objects.get(username="test"),
-            executor=User.objects.get(username="test"),
-        )
-        task.labels.set(Label.objects.all())
         response = self.client.post(
             reverse(
                 "labels_delete_view",
