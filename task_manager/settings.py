@@ -58,13 +58,13 @@ MIDDLEWARE = [
     'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
 ]
 
-ROLLBAR = {
-    'access_token': os.getenv("ROLLBAR_TOKEN"),
-    'environment': 'development' if os.getenv('DEBUG') == "1" else 'production',
-    'code_version': '1.0',
-    'branch': 'main',
-    'root': BASE_DIR,
-}
+# ROLLBAR = {
+#     'access_token': os.getenv("ROLLBAR_TOKEN"),
+#     'environment': 'development' if os.getenv('DEBUG') == "1" else 'production',
+#     'code_version': '1.0',
+#     'branch': 'main',
+#     'root': BASE_DIR,
+# }
 
 TEMPLATES = [
     {

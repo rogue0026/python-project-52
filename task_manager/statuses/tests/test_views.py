@@ -39,7 +39,7 @@ class StatusesListViewTest(BaseStatusesTest):
 
     def test_logged_in_uses_correct_template(self):
         response = self.client.get(reverse("statuses_list_view"))
-        self.assertTemplateUsed("statuses/index.html")
+        self.assertTemplateUsed(response, "statuses/index.html")
 
     def test_list_all_statuses(self):
         response = self.client.get(reverse("statuses_list_view"))
