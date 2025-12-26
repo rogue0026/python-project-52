@@ -30,7 +30,10 @@ class BaseStatusesTest(TestCase):
 class StatusesListViewTest(BaseStatusesTest):
     def test_redirect_if_not_logged_in(self):
         self.client.logout()
-        response = self.client.get(reverse("statuses_list_view"), follow=True)
+        response = self.client.get(
+            reverse("statuses_list_view"),
+            follow=True,
+        )
         self.assertRedirects(response, reverse("login_view"))
         self.assertContains(
             response,
@@ -71,15 +74,24 @@ class UpdateStatusViewTest(BaseStatusesTest):
     def test_uses_correct_template(self):
         first_status = Status.objects.first()
         response = self.client.get(
-            reverse("statuses_update_view", kwargs={"pk":first_status.id}),
+            reverse(
+                "statuses_update_view",
+                kwargs={"pk": first_status.id},
+            ),
         )
-        self.assertTemplateUsed(response, "statuses/update.html")
+        self.assertTemplateUsed(
+            response,
+            "statuses/update.html",
+        )
 
     def test_update_status(self):
         first_status = Status.objects.first()
         response = self.client.post(
-            reverse("statuses_update_view", kwargs={"pk":first_status.id}),
-            data=({"name": "first_status_updated"}),
+            reverse(
+                "statuses_update_view",
+                kwargs={"pk": first_status.id},
+            ),
+            data={"name": "first_status_updated"},
             follow=True,
         )
         first_status.refresh_from_db()
@@ -92,21 +104,32 @@ class DeleteStatusViewTest(BaseStatusesTest):
     def test_uses_correct_template(self):
         first_status = Status.objects.first()
         response = self.client.get(
-            reverse("statuses_delete_view", kwargs={"pk":first_status.id})
+            reverse(
+                "statuses_delete_view",
+                kwargs={"pk": first_status.id})
         )
-        self.assertTemplateUsed(response, "statuses/delete.html")
+        self.assertTemplateUsed(
+            response,
+            "statuses/delete.html",
+        )
 
     def test_show_status_name_on_page(self):
         last_status = Status.objects.last()
         response = self.client.get(
-            reverse("statuses_delete_view", kwargs={"pk":last_status.id})
+            reverse(
+                "statuses_delete_view",
+                kwargs={"pk": last_status.id},
+            )
         )
         self.assertContains(response, last_status.name)
 
     def test_delete_status(self):
         last_status = Status.objects.last()
         response = self.client.post(
-            reverse("statuses_delete_view", kwargs={"pk":last_status.id}),
+            reverse(
+                "statuses_delete_view",
+                kwargs={"pk": last_status.id},
+            ),
             follow=True,
         )
         status_exists = Status.objects.filter(name=last_status.name).exists()
@@ -117,7 +140,10 @@ class DeleteStatusViewTest(BaseStatusesTest):
     def test_constraint_delete_status(self):
         first_status = Status.objects.first()
         response = self.client.post(
-            reverse("statuses_delete_view", kwargs={"pk":first_status.id}),
+            reverse(
+                "statuses_delete_view",
+                kwargs={"pk": first_status.id},
+            ),
             follow=True,
         )
         self.assertRedirects(response, reverse("statuses_list_view"))

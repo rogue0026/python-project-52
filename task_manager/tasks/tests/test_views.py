@@ -81,7 +81,7 @@ class TasksListViewTest(BaseTasksTest):
         user = User.objects.get(username="user_4")
         response = self.client.get(
             reverse("tasks_list_view"),
-            data={"executor":user.id}
+            data={"executor": user.id},
         )
         tasks_actual = response.context.get("tasks")
         tasks_expected = Task.objects.filter(executor=user)
@@ -95,7 +95,7 @@ class TasksListViewTest(BaseTasksTest):
         status = Status.objects.get(name="status_6")
         response = self.client.get(
             reverse("tasks_list_view"),
-            data={"status":status.id},
+            data={"status": status.id},
         )
         tasks_actual = response.context.get("tasks")
         tasks_expected = Task.objects.filter(status=status)
@@ -122,7 +122,7 @@ class CreateTaskViewTest(BaseTasksTest):
 
     def test_create_task(self):
         self.client.login(username="user_1", password="12345")
-        form_data ={
+        form_data = {
             "name": "task_123",
             "description": "test description",
             "status": Status.objects.get(name="status_2").id,
@@ -159,7 +159,7 @@ class UpdateTaskViewTest(BaseTasksTest):
         self.client.login(username="user_1", password="12345")
         first_task = Task.objects.first()
         response = self.client.get(
-            reverse("tasks_update_view", kwargs={"pk":first_task.id}))
+            reverse("tasks_update_view", kwargs={"pk": first_task.id}))
         self.assertTemplateUsed(response, "tasks/update.html")
 
     def test_update_task(self):
@@ -179,7 +179,7 @@ class UpdateTaskViewTest(BaseTasksTest):
                 ]).values_list("id", flat=True),
         }
         response = self.client.post(
-            reverse("tasks_update_view", kwargs={"pk":first_task.id}),
+            reverse("tasks_update_view", kwargs={"pk": first_task.id}),
             data=form_data,
             follow=True,
         )
@@ -194,7 +194,9 @@ class UpdateTaskViewTest(BaseTasksTest):
         self.assertEqual(first_task.name, "task_updated_name")
         self.assertEqual(first_task.description, "updated_description"),
         self.assertEqual(first_task.status, status_expected)
-        self.assertEqual(first_task.executor, User.objects.get(username="user_8"))
+        self.assertEqual(
+            first_task.executor,
+            User.objects.get(username="user_8"))
         self.assertQuerySetEqual(
             first_task.labels.order_by("id"),
             labels_expected.order_by("id"),
@@ -214,15 +216,16 @@ class DeleteTaskViewTest(BaseTasksTest):
         self.client.login(username="user_1", password="12345")
         first_task = Task.objects.first()
         response = self.client.get(
-            reverse("tasks_delete_view", kwargs={"pk":first_task.id}))
+            reverse("tasks_delete_view", kwargs={"pk": first_task.id}))
         self.assertTemplateUsed(response, "tasks/delete.html")
 
     def test_delete_task(self):
         self.client.login(username="user_2", password="12345")
-        task = Task.objects.filter(author=User.objects.get(username="user_2")).first()
+        task = Task.objects.filter(
+            author=User.objects.get(username="user_2")).first()
         id_for_deletion = task.id
         response = self.client.post(
-            reverse("tasks_delete_view", kwargs={"pk":task.id}),
+            reverse("tasks_delete_view", kwargs={"pk": task.id}),
             follow=True,
         )
         self.assertFalse(Task.objects.filter(id=id_for_deletion).exists())
@@ -231,9 +234,10 @@ class DeleteTaskViewTest(BaseTasksTest):
 
     def test_delete_permission(self):
         self.client.login(username="user_1", password="12345")
-        task = Task.objects.filter(author=User.objects.get(username="user_2")).first()
+        task = Task.objects.filter(
+            author=User.objects.get(username="user_2")).first()
         response = self.client.post(
-            reverse("tasks_delete_view", kwargs={"pk":task.id}),
+            reverse("tasks_delete_view", kwargs={"pk": task.id}),
             follow=True,
         )
         self.assertRedirects(response, reverse("tasks_list_view"))

@@ -97,15 +97,21 @@ class UpdateLabelViewTest(BaseLabelTest):
     def test_logged_in_uses_correct_template(self):
         label = Label.objects.create(name="test_label_name")
         response = self.client.get(
-            reverse("labels_update_view", kwargs={"pk": label.id}),
+            reverse(
+                "labels_update_view",
+                kwargs={"pk": label.id},
+            ),
         )
         self.assertTemplateUsed(response, "labels/update.html")
 
     def test_update_label(self):
         label = Label.objects.create(name="test_label")
         response = self.client.post(
-            reverse("labels_update_view", kwargs={"pk": label.id}),
-            data=({"name": "test_label_updated"}),
+            reverse(
+                "labels_update_view",
+                kwargs={"pk": label.id},
+            ),
+            data={"name": "test_label_updated"},
             follow=True,
         )
         label.refresh_from_db()
@@ -120,14 +126,20 @@ class DeleteLabelViewTest(BaseLabelTest):
         label = Label.objects.create(name="label_for_delete")
         self.client.logout()
         response = self.client.get(
-            reverse("labels_delete_view", kwargs={"pk": label.id}),
+            reverse(
+                "labels_delete_view",
+                kwargs={"pk": label.id},
+            ),
         )
         self.assertRedirects(response, reverse("login_view"))
 
     def test_template_contains_label_name(self):
         label = Label.objects.first()
         response = self.client.get(
-            reverse("labels_delete_view", kwargs={"pk": label.id}),
+            reverse(
+                "labels_delete_view",
+                kwargs={"pk": label.id},
+            ),
         )
         self.assertContains(response, label.name)
 
