@@ -41,3 +41,11 @@ install:
 .PHONY: test
 test:
 	uv run manage.py test
+
+.PHONY: test_coverage
+test_coverage:
+	uv run coverage run manage.py test
+
+.PHONY: coverage_report
+coverage_report: test_coverage
+	uv run coverage html
