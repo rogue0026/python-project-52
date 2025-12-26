@@ -31,7 +31,6 @@ class UserListViewTest(BaseUsersTest):
         )
 
 
-
 class UserRegistrationViewTest(BaseUsersTest):
     def test_uses_correct_template(self):
         response = self.client.get(
