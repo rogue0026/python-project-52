@@ -57,10 +57,6 @@ class DeleteTaskView(DeletePermissionRequiredMixin,
     context_object_name = "task"
     success_message = "Задача успешно удалена"
 
-    def form_valid(self, form):
-        with transaction.atomic():
-            return super().form_valid(form)
-
 
 class DetailsTaskView(DetailView):
     template_name = "tasks/details.html"

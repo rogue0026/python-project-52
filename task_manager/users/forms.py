@@ -14,7 +14,7 @@ class RegistrationForm(UserCreationForm):
         ]
 
 
-class UserUpdateForm(UserCreationForm):
+class UserUpdateForm(RegistrationForm):
     class Meta:
         model = User
         fields = [
