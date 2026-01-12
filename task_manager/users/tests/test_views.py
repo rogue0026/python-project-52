@@ -38,7 +38,7 @@ class UserRegistrationViewTest(BaseUsersTest):
         )
         self.assertTemplateUsed(
             response,
-            "users/registration.html"
+            "common/create.html"
         )
 
     def test_create_user_normal_scenario(self):
@@ -108,7 +108,7 @@ class UpdateUserViewTest(BaseUsersTest):
                 "users_update_view",
                 kwargs={"pk": first_user.id}),
         )
-        self.assertTemplateUsed(response, "users/update.html")
+        self.assertTemplateUsed(response, "common/update.html")
 
     def test_update_user_normal_scenario(self):
         self.client.login(username="user_1", password="12345")
@@ -219,7 +219,7 @@ class DeleteUserViewTest(BaseUsersTest):
         )
         self.assertTemplateUsed(
             response,
-            "users/delete.html",
+            "common/delete.html",
         )
 
     def test_contains_user_full_name(self):

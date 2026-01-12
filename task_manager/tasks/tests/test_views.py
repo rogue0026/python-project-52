@@ -118,7 +118,7 @@ class CreateTaskViewTest(BaseTasksTest):
     def test_logged_in_uses_correct_template(self):
         self.client.login(username="user_1", password="12345")
         response = self.client.get(reverse("tasks_create_view"))
-        self.assertTemplateUsed(response, "tasks/create.html")
+        self.assertTemplateUsed(response, "common/create.html")
 
     def test_create_task(self):
         self.client.login(username="user_1", password="12345")
@@ -160,7 +160,7 @@ class UpdateTaskViewTest(BaseTasksTest):
         first_task = Task.objects.first()
         response = self.client.get(
             reverse("tasks_update_view", kwargs={"pk": first_task.id}))
-        self.assertTemplateUsed(response, "tasks/update.html")
+        self.assertTemplateUsed(response, "common/update.html")
 
     def test_update_task(self):
         self.client.login(username="user_1", password="12345")
@@ -217,7 +217,7 @@ class DeleteTaskViewTest(BaseTasksTest):
         first_task = Task.objects.first()
         response = self.client.get(
             reverse("tasks_delete_view", kwargs={"pk": first_task.id}))
-        self.assertTemplateUsed(response, "tasks/delete.html")
+        self.assertTemplateUsed(response, "common/delete.html")
 
     def test_delete_task(self):
         self.client.login(username="user_2", password="12345")

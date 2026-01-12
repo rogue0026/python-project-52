@@ -62,7 +62,7 @@ class CreateLabelViewTest(BaseLabelTest):
 
     def test_logged_in_uses_correct_template(self):
         response = self.client.get(reverse("labels_create_view"))
-        self.assertTemplateUsed(response, "labels/create.html")
+        self.assertTemplateUsed(response, "common/create.html")
 
     def test_create_new_label(self):
         response = self.client.post(
@@ -102,7 +102,7 @@ class UpdateLabelViewTest(BaseLabelTest):
                 kwargs={"pk": label.id},
             ),
         )
-        self.assertTemplateUsed(response, "labels/update.html")
+        self.assertTemplateUsed(response, "common/update.html")
 
     def test_update_label(self):
         label = Label.objects.create(name="test_label")

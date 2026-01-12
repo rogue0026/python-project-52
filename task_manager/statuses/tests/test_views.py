@@ -56,7 +56,7 @@ class StatusesListViewTest(BaseStatusesTest):
 class CreateStatusViewTest(BaseStatusesTest):
     def test_uses_correct_template(self):
         response = self.client.get(reverse("statuses_create_view"))
-        self.assertTemplateUsed(response, "statuses/create.html")
+        self.assertTemplateUsed(response, "common/create.html")
 
     def test_create_new_status(self):
         response = self.client.post(
@@ -81,7 +81,7 @@ class UpdateStatusViewTest(BaseStatusesTest):
         )
         self.assertTemplateUsed(
             response,
-            "statuses/update.html",
+            "common/update.html",
         )
 
     def test_update_status(self):
@@ -110,7 +110,7 @@ class DeleteStatusViewTest(BaseStatusesTest):
         )
         self.assertTemplateUsed(
             response,
-            "statuses/delete.html",
+            "common/delete.html",
         )
 
     def test_show_status_name_on_page(self):

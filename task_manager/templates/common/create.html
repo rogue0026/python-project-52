@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+{% load django_bootstrap5 %}
+<main class="form-signin w-50 m-auto">
+        <form method="post" action="{% url view_name %}">
+            {% csrf_token %}
+            <h1 class="h3 mb-3 fw-normal">{{ header_name }}</h1>
+            {% bootstrap_form form %}
+            {% if create_button_name %}
+                {%  bootstrap_button button_type="submit" content=create_button_name %}
+            {% else %}
+                {% bootstrap_button button_type="submit" content="Создать" %}
+            {% endif %}
+        </form>
+    </main>
+{% endblock %}

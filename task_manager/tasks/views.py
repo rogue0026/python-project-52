@@ -25,11 +25,15 @@ class TasksListView(AuthRequiredMixin, FilterView):
 class CreateTaskView(AuthRequiredMixin,
                      SuccessMessageMixin,
                      CreateView):
-    template_name = "tasks/create.html"
+    template_name = "common/create.html"
     success_url = reverse_lazy("tasks_list_view")
     model = Task
     form_class = TaskForm
     success_message = "Задача успешно создана"
+    extra_context = {
+        "view_name": "tasks_create_view",
+        "header_name": "Создать задачу",
+    }
 
     def form_valid(self, form):
         with transaction.atomic():
@@ -40,22 +44,29 @@ class CreateTaskView(AuthRequiredMixin,
 class UpdateTaskView(AuthRequiredMixin,
                      SuccessMessageMixin,
                      UpdateView):
-    template_name = "tasks/update.html"
+    template_name = "common/update.html"
     success_url = reverse_lazy("tasks_list_view")
     model = Task
     form_class = TaskForm
-    context_object_name = "task"
     success_message = "Задача успешно изменена"
+    extra_context = {
+        "view_name": "tasks_update_view",
+        "header_name": "Изменение задачи",
+    }
 
 
 class DeleteTaskView(DeletePermissionRequiredMixin,
                      SuccessMessageMixin,
                      DeleteView):
-    template_name = "tasks/delete.html"
+    template_name = "common/delete.html"
     success_url = reverse_lazy("tasks_list_view")
     model = Task
     context_object_name = "task"
     success_message = "Задача успешно удалена"
+    extra_context = {
+        "view_name": "tasks_delete_view",
+        "header_name": "Удаление задачи",
+    }
 
 
 class DetailsTaskView(DetailView):

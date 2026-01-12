@@ -25,6 +25,9 @@ class Task(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     labels = models.ManyToManyField(Label, through="TaskLabel")
 
+    def __str__(self):
+        return self.name
+
 
 class TaskLabel(models.Model):
     pk = models.CompositePrimaryKey("task_id", "label_id")

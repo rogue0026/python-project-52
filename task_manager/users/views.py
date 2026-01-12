@@ -21,21 +21,30 @@ class UserListView(ListView):
 
 class UserRegistrationView(SuccessMessageMixin,
                            CreateView):
-    template_name = "users/registration.html"
+    template_name = "common/create.html"
     success_url = reverse_lazy("login_view")
     form_class = RegistrationForm
     success_message = "Пользователь успешно зарегистрирован"
+    extra_context = {
+        "view_name": "registration_view",
+        "header_name": "Регистрация",
+        "create_button_name": "Зарегистрировать",
+    }
 
 
 class UpdateUserView(AuthRequiredMixin,
                      EditPermissionRequiredMixin,
                      SuccessMessageMixin,
                      UpdateView):
-    template_name = "users/update.html"
+    template_name = "common/update.html"
     success_url = reverse_lazy("users_list_view")
     model = User
     form_class = UserUpdateForm
     success_message = "Пользователь успешно изменен"
+    extra_context = {
+        "view_name": "users_update_view",
+        "header_name": "Редактирование данных пользователя",
+    }
 
 
 class DeleteUserView(AuthRequiredMixin,
@@ -44,6 +53,9 @@ class DeleteUserView(AuthRequiredMixin,
                      DeleteView):
     login_url = "users/login/"
     success_url = reverse_lazy("users_list_view")
-    template_name = "users/delete.html"
+    template_name = "common/delete.html"
     model = User
     success_message = "Пользователь успешно удален"
+    extra_context = {
+        "view_name": "users_delete_view",
+    }

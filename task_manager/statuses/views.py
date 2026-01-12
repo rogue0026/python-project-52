@@ -15,29 +15,40 @@ class StatusesListView(AuthRequiredMixin, ListView):
 
 
 class CreateStatusView(SuccessMessageMixin, CreateView):
-    template_name = "statuses/create.html"
+    template_name = "common/create.html"
     success_url = reverse_lazy("statuses_list_view")
     model = Status
     form_class = StatusForm
     success_message = "Статус успешно создан"
+    extra_context = {
+        "view_name": "statuses_create_view",
+        "header_name": "Создать статус",
+    }
 
 
 class UpdateStatusView(SuccessMessageMixin, UpdateView):
-    template_name = "statuses/update.html"
+    template_name = "common/update.html"
     success_url = reverse_lazy("statuses_list_view")
     model = Status
     form_class = StatusForm
     success_message = "Статус успешно изменен"
     context_object_name = "status"
+    extra_context = {
+        "view_name": "statuses_update_view",
+        "header_name": "Изменение статуса",
+    }
 
 
 class DeleteStatusView(SuccessMessageMixin,
                        DeleteView):
-    template_name = "statuses/delete.html"
+    template_name = "common/delete.html"
     success_url = reverse_lazy("statuses_list_view")
     model = Status
-    context_object_name = "status"
     success_message = "Статус успешно удален"
+    extra_context = {
+        "view_name": "statuses_delete_view",
+        "header_name": "Удаление статуса",
+    }
 
     def form_valid(self, form):
         try:
