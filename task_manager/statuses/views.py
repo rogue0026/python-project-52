@@ -1,12 +1,17 @@
 from django.contrib import messages
-from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import ProtectedError
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DeleteView, UpdateView
+from django.views.generic import ListView
 from task_manager.statuses.forms import StatusForm
 from task_manager.statuses.models import Status
 from task_manager.users.mixins import AuthRequiredMixin
+from task_manager.common_views import BaseCreate, BaseUpdate, BaseDelete
+
+
+class BaseStatuses:
+    model = Status
+    success_url = reverse_lazy("statuses_list_view")
 
 
 class StatusesListView(AuthRequiredMixin, ListView):
@@ -14,10 +19,7 @@ class StatusesListView(AuthRequiredMixin, ListView):
     model = Status
 
 
-class CreateStatusView(SuccessMessageMixin, CreateView):
-    template_name = "common/create.html"
-    success_url = reverse_lazy("statuses_list_view")
-    model = Status
+class CreateStatusView(BaseStatuses, BaseCreate):
     form_class = StatusForm
     success_message = "Статус успешно создан"
     extra_context = {
@@ -26,24 +28,16 @@ class CreateStatusView(SuccessMessageMixin, CreateView):
     }
 
 
-class UpdateStatusView(SuccessMessageMixin, UpdateView):
-    template_name = "common/update.html"
-    success_url = reverse_lazy("statuses_list_view")
-    model = Status
+class UpdateStatusView(BaseStatuses, BaseUpdate):
     form_class = StatusForm
     success_message = "Статус успешно изменен"
-    context_object_name = "status"
     extra_context = {
         "view_name": "statuses_update_view",
         "header_name": "Изменение статуса",
     }
 
 
-class DeleteStatusView(SuccessMessageMixin,
-                       DeleteView):
-    template_name = "common/delete.html"
-    success_url = reverse_lazy("statuses_list_view")
-    model = Status
+class DeleteStatusView(BaseStatuses, BaseDelete):
     success_message = "Статус успешно удален"
     extra_context = {
         "view_name": "statuses_delete_view",

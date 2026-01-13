@@ -1,18 +1,17 @@
 from django.contrib import messages
-from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import ProtectedError
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic import (
-    CreateView,
-    DeleteView,
-    ListView,
-    UpdateView,
-)
-
+from django.views.generic import ListView
+from task_manager.common_views import BaseCreate, BaseUpdate, BaseDelete
 from task_manager.labels.forms import LabelForm
 from task_manager.labels.models import Label
 from task_manager.users.mixins import AuthRequiredMixin
+
+
+class BaseLabels:
+    success_url = reverse_lazy('labels_list_view')
+    model = Label
 
 
 class LabelListView(AuthRequiredMixin, ListView):
@@ -20,14 +19,9 @@ class LabelListView(AuthRequiredMixin, ListView):
     template_name = "labels/index.html"
 
 
-class CreateLabelView(
-    AuthRequiredMixin,
-    SuccessMessageMixin,
-    CreateView,
-):
-    template_name = "common/create.html"
-    success_url = reverse_lazy('labels_list_view')
-    model = Label
+class CreateLabelView(BaseLabels,
+                      AuthRequiredMixin,
+                      BaseCreate):
     form_class = LabelForm
     success_message = "Метка успешно создана"
     extra_context = {
@@ -36,13 +30,9 @@ class CreateLabelView(
     }
 
 
-class UpdateLabelView(
-    AuthRequiredMixin,
-    SuccessMessageMixin,
-    UpdateView):
-    template_name = "common/update.html"
-    success_url = reverse_lazy("labels_list_view")
-    model = Label
+class UpdateLabelView(BaseLabels,
+                      AuthRequiredMixin,
+                      BaseUpdate):
     form_class = LabelForm
     success_message = "Метка успешно изменена"
     extra_context = {
@@ -51,12 +41,9 @@ class UpdateLabelView(
     }
 
 
-class DeleteLabelView(AuthRequiredMixin,
-                      SuccessMessageMixin,
-                      DeleteView):
-    template_name = "common/delete.html"
-    success_url = reverse_lazy("labels_list_view")
-    model = Label
+class DeleteLabelView(BaseLabels,
+                      AuthRequiredMixin,
+                      BaseDelete):
     success_message = "Метка успешно удалена"
     extra_context = {
         "view_name": "labels_delete_view",

@@ -1,12 +1,7 @@
 from django.contrib.auth.models import User
-from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from django.views.generic.edit import (
-    CreateView,
-    DeleteView,
-    UpdateView
-)
 from django.views.generic.list import ListView
+from task_manager.common_views import BaseCreate, BaseUpdate, BaseDelete
 from task_manager.users.forms import RegistrationForm, UserUpdateForm
 from task_manager.users.mixins import (
     AuthRequiredMixin,
@@ -14,14 +9,16 @@ from task_manager.users.mixins import (
 )
 
 
+class BaseUsers:
+    model = User
+
+
 class UserListView(ListView):
     template_name = "users/index.html"
     model = User
 
 
-class UserRegistrationView(SuccessMessageMixin,
-                           CreateView):
-    template_name = "common/create.html"
+class UserRegistrationView(BaseUsers, BaseCreate):
     success_url = reverse_lazy("login_view")
     form_class = RegistrationForm
     success_message = "Пользователь успешно зарегистрирован"
@@ -32,13 +29,11 @@ class UserRegistrationView(SuccessMessageMixin,
     }
 
 
-class UpdateUserView(AuthRequiredMixin,
+class UpdateUserView(BaseUsers,
+                     AuthRequiredMixin,
                      EditPermissionRequiredMixin,
-                     SuccessMessageMixin,
-                     UpdateView):
-    template_name = "common/update.html"
+                     BaseUpdate):
     success_url = reverse_lazy("users_list_view")
-    model = User
     form_class = UserUpdateForm
     success_message = "Пользователь успешно изменен"
     extra_context = {
@@ -47,14 +42,12 @@ class UpdateUserView(AuthRequiredMixin,
     }
 
 
-class DeleteUserView(AuthRequiredMixin,
+class DeleteUserView(BaseUsers,
+                     AuthRequiredMixin,
                      EditPermissionRequiredMixin,
-                     SuccessMessageMixin,
-                     DeleteView):
+                     BaseDelete):
     login_url = "users/login/"
     success_url = reverse_lazy("users_list_view")
-    template_name = "common/delete.html"
-    model = User
     success_message = "Пользователь успешно удален"
     extra_context = {
         "view_name": "users_delete_view",
